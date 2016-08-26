@@ -26,7 +26,7 @@ This project adheres to the Contributor Covenant [code of conduct](http://contri
 
 ### Reporting Bugs
 
-This section guides you through submitting a bug report. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer: :computer:, and find related reports :mag_right:.
+This section guides you through submitting a bug report. Following these guidelines helps maintainers and the community understand your report :pencil:, reproduce the behavior :computer:, and find related reports :mag_right:.
 
 Before creating bug reports, please check the existing issues to verify that the problem has not been reported already. When you are creating a bug report, please use a clear and descriptive title and include as many details as possible. We recommend the following template:
 
