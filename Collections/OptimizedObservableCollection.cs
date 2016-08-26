@@ -111,6 +111,14 @@ namespace XamarinUniversity.Infrastructure
                 parent.shouldRaiseNotifications = false;
             }
 
+            #if DEBUG
+            ~MassUpdater ()
+            {
+                Debug.Assert (true, "Did not dispose returned object from OptimizedObservableCollection.BeginMassUpdate!");
+            }
+            #endif
+
+
             public void Dispose ()
             {
                 parent.shouldRaiseNotifications = true;
