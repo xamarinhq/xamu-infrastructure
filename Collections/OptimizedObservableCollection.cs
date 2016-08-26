@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace XamarinUniversity.Infrastructure
 {
@@ -47,6 +48,7 @@ namespace XamarinUniversity.Infrastructure
     /// }
     /// </code>
     /// </example>
+    [DebuggerDisplay ("Count={Count}")]
     public class OptimizedObservableCollection<T> : ObservableCollection<T>
     {
         bool shouldRaiseNotifications;

@@ -28,6 +28,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace XamarinUniversity.Infrastructure
 {
@@ -42,7 +44,9 @@ namespace XamarinUniversity.Infrastructure
     /// </remarks>
     ///<typeparam name="TKey">Key</typeparam>
     ///<typeparam name="TValue">Value type</typeparam>
-    public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, INotifyCollectionChanged
+    [DebuggerDisplay ("Count={Count}")]
+    public class ObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>, 
+            INotifyCollectionChanged, INotifyPropertyChanged
     {
         // Internal dictionary that holds values
         private readonly IDictionary<TKey, TValue> underlyingDictionary;
@@ -52,6 +56,11 @@ namespace XamarinUniversity.Infrastructure
         /// Event raised for collection change notification
         /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        /// <summary>
+        /// Event raise for property changes.
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Constructor
@@ -326,7 +335,10 @@ namespace XamarinUniversity.Infrastructure
         protected void OnNotifyAdd(KeyValuePair<TKey, TValue> item)
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+            OnPropertyChanged (new PropertyChangedEventArgs (nameof (Count)));
+            OnPropertyChanged (new PropertyChangedEventArgs (item.Key.ToString ()));
         }
+
 
         /// <summary>
         /// This is used to notify removals from the dictionary
@@ -335,6 +347,8 @@ namespace XamarinUniversity.Infrastructure
         protected void OnNotifyRemove(KeyValuePair<TKey, TValue> item)
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            OnPropertyChanged (new PropertyChangedEventArgs (nameof (Count)));
+            OnPropertyChanged (new PropertyChangedEventArgs (item.Key.ToString ()));
         }
 
         /// <summary>
@@ -345,6 +359,7 @@ namespace XamarinUniversity.Infrastructure
         protected void OnNotifyReplace(KeyValuePair<TKey, TValue> newItem, KeyValuePair<TKey, TValue> oldItem)
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem));
+            OnPropertyChanged (new PropertyChangedEventArgs (oldItem.Key.ToString ()));
         }
 
         /// <summary>
@@ -353,6 +368,7 @@ namespace XamarinUniversity.Infrastructure
         protected void OnNotifyReset()
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnPropertyChanged (new PropertyChangedEventArgs (nameof (Count)));
         }
 
         /// <summary>
@@ -364,12 +380,19 @@ namespace XamarinUniversity.Infrastructure
             if (shouldRaiseNotifications == false)
                 return;
 
-            var eh = CollectionChanged;
-            if (eh != null)
-            {
-                foreach (NotifyCollectionChangedEventHandler nh in eh.GetInvocationList())
-                    nh.Invoke(this, e);
-            }
+            CollectionChanged?.Invoke (this, e);
+        }
+
+        /// <summary>
+        /// Raises the property change notification
+        /// </summary>
+        /// <param name="e">Property event args.</param>
+        protected virtual void OnPropertyChanged (PropertyChangedEventArgs e)
+        {
+            if (shouldRaiseNotifications == false)
+                return;
+
+            PropertyChanged?.Invoke (this, e);
         }
 
         /// <summary>

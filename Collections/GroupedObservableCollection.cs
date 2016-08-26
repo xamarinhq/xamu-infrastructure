@@ -27,6 +27,7 @@
 using System.ComponentModel;
 using XamarinUniversity.Infrastructure;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace XamarinUniversity.Collections
 {
@@ -36,6 +37,7 @@ namespace XamarinUniversity.Collections
     /// </summary>
     /// <typeparam name="TKey">The type to use for the grouping key<typeparam name="TKey"/>
     /// <typeparam name="TValue">The type to use for the items<typeparam name="TKey"/>
+    [DebuggerDisplay ("Count={Count}")]
     public class GroupedObservableCollection<TKey,TValue> 
         : OptimizedObservableCollection<TValue>
     {

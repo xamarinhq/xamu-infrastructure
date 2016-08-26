@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace XamarinUniversity.Infrastructure
@@ -37,6 +38,7 @@ namespace XamarinUniversity.Infrastructure
     /// method. You can then "refresh" the data at any time and have the collection
     /// make callbacks when starting and completing the refresh.
     /// </summary>
+    [DebuggerDisplay ("Count={Count}")]
     public class RefreshingCollection<T> : ObservableCollection<T>
     {
         private bool isRefreshing;
