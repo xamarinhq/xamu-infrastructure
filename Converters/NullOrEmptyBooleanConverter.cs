@@ -39,19 +39,19 @@ namespace XamarinUniversity.Converters
         /// <summary>
         /// Mapping value for null - defaults to false.
         /// </summary>
-        public bool EmptyTreatment { get; set; }
+        public bool Empty { get; set; }
         /// <summary>
         /// Mapping value for non-null, defaults to true.
         /// </summary>
-        public bool NotEmptyTreatment { get; set; }
+        public bool NotEmpty { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public NullOrEmptyBooleanConverter()
         {
-            EmptyTreatment = false;
-            NotEmptyTreatment = true;
+            Empty = false;
+            NotEmpty = true;
         }
 
         /// <summary>
@@ -64,8 +64,10 @@ namespace XamarinUniversity.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (targetType != typeof(bool))
-                throw new ArgumentException("Bad type conversion for NullBooleanConverter");
-            return (string.IsNullOrEmpty(value as string)) ? EmptyTreatment : NotEmptyTreatment;
+                throw new ArgumentException("Bad type conversion for NullOrEmptyBooleanConverter");
+
+            string testValue = (value ?? "").ToString ();
+            return (string.IsNullOrEmpty(testValue)) ? Empty : NotEmpty;
         }
 
         /// <summary>

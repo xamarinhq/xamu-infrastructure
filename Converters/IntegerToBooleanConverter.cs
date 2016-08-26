@@ -36,21 +36,29 @@ namespace XamarinUniversity.Converters
     public class IntegerToBooleanConverter : IMarkupExtension, IValueConverter
     {
         /// <summary>
-        /// Mapping for zero to Visibility.  Defaults to Collapsed.
+        /// Boolean value for zero; defaults to false.
         /// </summary>
-        public bool ZeroTreatment { get; set; }
+        public bool ZeroOrNull { get; set; }
+
         /// <summary>
-        /// Mapping for non-zero to Visibility.  Defaults to Visible.
+        /// Boolean value for non-zero; defaults to true.
         /// </summary>
-        public bool NonzeroTreatment { get; set; }
+        public bool Positive { get; set; }
+
+        /// <summary>
+        /// Boolean value for negative treqtment; defaults to false.
+        /// </summary>
+        /// <value><c>true</c> if negative treatment; otherwise, <c>false</c>.</value>
+        public bool Negative { get; set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public IntegerToBooleanConverter()
         {
-            NonzeroTreatment = true;
-            ZeroTreatment = false;
+            Positive = true;
+            ZeroOrNull = false;
+            Negative = false;
         }
 
         #region IValueConverter Members
@@ -65,9 +73,13 @@ namespace XamarinUniversity.Converters
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value == null)
-                return ZeroTreatment;               
+                return ZeroOrNull;
 
-            return System.Convert.ToInt32 (value, culture) == 0 ? ZeroTreatment : NonzeroTreatment;
+            int result = System.Convert.ToInt32 (value, culture);
+            return result < 0 ? Negative 
+                : result == 0 
+                    ? ZeroOrNull 
+                    : Positive;
         }
 
         /// <summary>

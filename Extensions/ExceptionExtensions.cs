@@ -38,23 +38,40 @@ namespace XamarinUniversity.Infrastructure
         /// Flatten the exception and inner exception data.
         /// </summary>
         /// <param name="ex">Exception</param>
-        /// <param name="message">Any string prefix to add</param>
+        /// <param name="header">Any string prefix to add</param>
         /// <param name="includeStackTrace">True to include stack trace at end</param>
         /// <returns>String with Message and all InnerException messages appended together</returns>
-        public static string Flatten(this Exception ex, string message = "", bool includeStackTrace = false)
+        public static string Flatten(this Exception ex, string header = null, bool includeStackTrace = false)
         {
-            StringBuilder sb = new StringBuilder(message);
+            StringBuilder sb = new StringBuilder();
 
-            Exception current = ex;
-            while (current != null)
+            // Add any header
+            if (!string.IsNullOrEmpty (header))
+                sb.AppendLine (header);
+
+            Exception current;
+            AggregateException aex = ex as AggregateException;
+            if (aex != null)
             {
-                sb.AppendLine(current.Message);
-                if (includeStackTrace)
-                    sb.Append(ex.StackTrace);
-                
-                current = current.InnerException;
-                if (current != null && includeStackTrace)
-                    sb.AppendLine();
+                sb.AppendLine ("Aggregate Exception.");
+                aex = aex.Flatten ();               
+                for (int i = 0; i < aex.InnerExceptions.Count; i++) {
+                    current = aex.InnerExceptions [i];
+                    sb.Append (current.Flatten ($"{i}: ", includeStackTrace));
+                }
+            }
+            else
+            {
+                current = ex;
+                while (current != null) {
+                    sb.AppendLine (current.Message);
+                    if (includeStackTrace)
+                        sb.Append (ex.StackTrace);
+
+                    current = current.InnerException;
+                    if (current != null && includeStackTrace)
+                        sb.AppendLine ();
+                }
             }
 
             return sb.ToString();

@@ -49,7 +49,7 @@ namespace XamarinUniversity.Collections
         /// The read-only grouping key.
         /// </summary>
         /// <value>The group title.</value>
-        public TKey Key { get; }
+        public TKey Key { get { return key; } }
 
         /// <summary>
         /// Simple property to allow us to collapse a group when it has no items.

@@ -54,16 +54,19 @@ namespace XamarinUniversity.Infrastructure
         {
             task.ContinueWith(tr =>
             {
-                Debug.WriteLine("Encountered {0} at {1}, line #{2}",
-                    task.Exception.GetType(), member, lineNumber);
+                Debug.WriteLine ("Encountered {0} at {1}, line #{2}",
+                            task.Exception.GetType (), member, lineNumber);
+                Debug.WriteLine(task.Exception.Flatten());
+
                 if (faultHandler != null)
                 {
                     faultHandler.Invoke (task.Exception);
                 }
                 else
                 {
-                    throw task.Exception;
+                    Debug.WriteLine ("WARNING: exception {0} was ignored!", task.Exception.GetType ());
                 }
+
             }, CancellationToken.None,
                 TaskContinuationOptions.OnlyOnFaulted,
                 TaskScheduler.FromCurrentSynchronizationContext());

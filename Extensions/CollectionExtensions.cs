@@ -38,20 +38,6 @@ namespace XamarinUniversity.Infrastructure
     public static class CollectionExtensions
     {
         /// <summary>
-        /// Enumerates a collection and executes a predicate against each item
-        /// </summary>
-        /// <typeparam name="T">Type of elements</typeparam>
-        /// <param name="collection">Collection</param>
-        /// <param name="action">Action to execute on each element</param>
-        public static void ForEach<T> (this IEnumerable<T> collection, Action<T> action)
-        {
-            if (action == null)
-                throw new ArgumentNullException ("action", "Missing Action<T> to execute.");
-            if (collection != null)
-                foreach (var o in collection) action (o);
-        }
-
-        /// <summary>
         /// Takes a LINQ GroupBy value and turns it into a set of GroupedObservableCollection objects.
         /// </summary>
         /// <returns>The grouped observable.</returns>

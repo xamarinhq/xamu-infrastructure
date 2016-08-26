@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using Xamarin.Forms;
-using System.Collections.Generic;
 using System;
 
 namespace XamarinUniversity.Infrastructure
