@@ -1,0 +1,25 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="XamU.Infrastructure" expanded="True">
+            <Node name="XamU.Infrastructure" expanded="True">
+              <Node name="Behaviors" expanded="True" />
+              <Node name="Controls" expanded="True" />
+              <Node name="Extensions" expanded="True" />
+              <Node name="MarkupExtensions" expanded="True">
+                <Node name="RelativeBindingContext.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
