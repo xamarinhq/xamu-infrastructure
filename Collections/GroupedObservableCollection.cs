@@ -1,5 +1,5 @@
 ﻿//
-// ObservableDictionary.cs
+// GroupedObservableCollection.cs
 //
 // Author:
 //       Mark Smith <mark.smith@xamarin.com>
@@ -40,25 +40,14 @@ namespace XamarinUniversity.Collections
         : OptimizedObservableCollection<TValue>
     {
         // Data
-        TKey key;
         bool hasItems;
+        readonly TKey key;
 
         /// <summary>
-        /// The group key
+        /// The read-only grouping key.
         /// </summary>
         /// <value>The group title.</value>
-        public TKey Key {
-            get {
-                return key;
-            }
-
-            set {
-                if (Equals(key, value) == false) {
-                    key = value;
-                    OnPropertyChanged (new PropertyChangedEventArgs (nameof (Key)));
-                }
-            }
-        }
+        public TKey Key { get; }
 
         /// <summary>
         /// Simple property to allow us to collapse a group when it has no items.
@@ -80,8 +69,9 @@ namespace XamarinUniversity.Collections
         /// <summary>
         /// Initializes a grouped collection.
         /// </summary>
-        public GroupedObservableCollection ()
+        public GroupedObservableCollection (TKey key)
         {
+            this.key = key;
         }
 
         /// <summary>
