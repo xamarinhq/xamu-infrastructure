@@ -41,13 +41,9 @@ namespace XamarinUniversity.Infrastructure
         /// <param name="header">Any string prefix to add</param>
         /// <param name="includeStackTrace">True to include stack trace at end</param>
         /// <returns>String with Message and all InnerException messages appended together</returns>
-        public static string Flatten(this Exception ex, string header = null, bool includeStackTrace = false)
+        public static string Flatten(this Exception ex, string header = "", bool includeStackTrace = false)
         {
-            StringBuilder sb = new StringBuilder();
-
-            // Add any header
-            if (!string.IsNullOrEmpty (header))
-                sb.AppendLine (header);
+            StringBuilder sb = new StringBuilder(header);
 
             Exception current;
             AggregateException aex = ex as AggregateException;
@@ -57,16 +53,17 @@ namespace XamarinUniversity.Infrastructure
                 aex = aex.Flatten ();               
                 for (int i = 0; i < aex.InnerExceptions.Count; i++) {
                     current = aex.InnerExceptions [i];
-                    sb.Append (current.Flatten ($"{i}: ", includeStackTrace));
+                    sb.AppendLine (current.Flatten ($"{i}: ", includeStackTrace));
                 }
             }
             else
             {
                 current = ex;
                 while (current != null) {
-                    sb.AppendLine (current.Message);
+                    sb.AppendFormat ("{0} : {1}", current.GetType(), current.Message);
                     if (includeStackTrace)
                         sb.Append (ex.StackTrace);
+                    else sb.AppendLine ();
 
                     current = current.InnerException;
                     if (current != null && includeStackTrace)
