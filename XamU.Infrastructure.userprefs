@@ -5,11 +5,13 @@
         <State name="__root__">
           <Node name="XamU.Infrastructure" expanded="True">
             <Node name="XamU.Infrastructure" expanded="True">
-              <Node name="Behaviors" expanded="True" />
-              <Node name="Controls" expanded="True" />
+              <Node name="Collections" expanded="True" />
               <Node name="Extensions" expanded="True" />
-              <Node name="MarkupExtensions" expanded="True">
-                <Node name="RelativeBindingContext.cs" selected="True" />
+              <Node name="Interfaces" expanded="True" />
+              <Node name="MarkupExtensions" expanded="True" />
+              <Node name="Mvvm" expanded="True" />
+              <Node name="Services" expanded="True">
+                <Node name="StackNavigationService.cs" selected="True" />
               </Node>
             </Node>
           </Node>

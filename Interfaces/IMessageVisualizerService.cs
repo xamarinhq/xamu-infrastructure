@@ -36,11 +36,11 @@ namespace XamarinUniversity.Interfaces
         /// <summary>
         /// Show a message on the UI
         /// </summary>
-        /// <returns>The message.</returns>
-        /// <param name="title">Title.</param>
-        /// <param name="message">Message.</param>
-        /// <param name="ok">Ok.</param>
-        /// <param name="cancel">Cancel.</param>
+        /// <returns>Async result (true/false)</returns>
+        /// <param name="title">Title</param>
+        /// <param name="message">Message</param>
+        /// <param name="ok">Text for OK button</param>
+        /// <param name="cancel">Optional text for Cancel button</param>
         Task<bool> ShowMessage(
             string title, string message, string ok, string cancel = null);
     }
