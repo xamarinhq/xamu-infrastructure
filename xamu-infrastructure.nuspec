@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata minClientVersion="2.8.1">
+    <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
     <version>1.0.160829</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
@@ -10,6 +11,7 @@
     <iconUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Set of Xamarin.Forms classes for enterprise and MVVM development; includes markup extensions, behaviors, custom controls and abstractions for MVVM.</description>
+    <copyright>Copyright (C) 2016 Xamarin, Microsoft</copyright>
     <summary>Set of Xamarin.Forms classes for enterprise and MVVM development.</summary>
     <tags>mvvm ios xamarin xamarin.forms android winphone uwp windows behaviors XAML</tags>
     <dependencies>
