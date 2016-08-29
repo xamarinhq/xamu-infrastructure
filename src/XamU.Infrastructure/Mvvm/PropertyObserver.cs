@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -47,7 +46,7 @@ namespace XamarinUniversity
     public sealed class PropertyObserver<T> : IDisposable
         where T : class, INotifyPropertyChanged
     {
-        private readonly ConcurrentDictionary<string, Action<T>> pcToHandlerMap;
+        private readonly Dictionary<string, Action<T>> pcToHandlerMap;
         private T source;
 
         /// <summary>
@@ -62,7 +61,7 @@ namespace XamarinUniversity
 
             source = propertySource;
             source.PropertyChanged += OnSourcePropertyChanged;
-            pcToHandlerMap = new ConcurrentDictionary<string, Action<T>> ();
+            pcToHandlerMap = new Dictionary<string, Action<T>> ();
         }
 
         /// <summary>
@@ -124,7 +123,7 @@ namespace XamarinUniversity
             if (handler == null)
                 throw new ArgumentNullException ("handler");
 
-            pcToHandlerMap.TryAdd (propertyName, handler);
+            pcToHandlerMap.Add (propertyName, handler);
             return this;
         }
 
@@ -144,8 +143,7 @@ namespace XamarinUniversity
             if (String.IsNullOrEmpty (propertyName))
                 throw new ArgumentException ("'expression' did not provide a property name.");
 
-            Action<T> callback;
-            pcToHandlerMap.TryRemove (propertyName, out callback);
+            pcToHandlerMap.Remove (propertyName);
 
             return this;
         }
