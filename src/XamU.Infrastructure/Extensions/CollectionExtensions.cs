@@ -166,7 +166,8 @@ namespace XamarinUniversity.Infrastructure
         /// <summary>
         /// Removes a set of items from the collection.
         /// </summary>
-        /// <param name="collection">Collection.</param>
+        /// <param name="collection">Collection to remove from</param>
+        /// <param name="items">Items to remove from collection.</param>
         public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
             if (collection == null)

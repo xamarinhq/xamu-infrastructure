@@ -58,7 +58,8 @@ namespace XamarinUniversity.Infrastructure
         /// </summary>
         /// <returns>The owner.</returns>
         /// <param name="view">View.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        /// <param name="name">Name of the resource to locate.</param>
+        /// <typeparam name="T">Type of resource being retrieved</typeparam>
         public static T FindResource<T> (this VisualElement view, string name)
         {
             T resource;

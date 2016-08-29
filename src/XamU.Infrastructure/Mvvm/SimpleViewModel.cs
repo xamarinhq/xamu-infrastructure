@@ -37,6 +37,9 @@ namespace XamarinUniversity.Infrastructure
     /// </summary>
     public class SimpleViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Event to raise when a property is changed.
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

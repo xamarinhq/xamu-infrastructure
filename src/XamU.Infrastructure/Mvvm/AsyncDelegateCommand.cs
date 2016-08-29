@@ -34,8 +34,19 @@ namespace XamarinUniversity.Infrastructure
     /// </summary>
 	public class AsyncDelegateCommand : IDelegateCommand
 	{
+        /// <summary>
+        /// Delegate to call when CanExecute method is called.
+        /// </summary>
 		protected readonly Predicate<object> canExecute;
+
+        /// <summary>
+        /// Delegate to call when Execute is called.
+        /// </summary>
 		protected Func<object, Task> asyncExecute;
+
+        /// <summary>
+        /// Event which is raised when the state of this command has changed.
+        /// </summary>
 		public event EventHandler CanExecuteChanged;
 
         /// <summary>
@@ -121,8 +132,19 @@ namespace XamarinUniversity.Infrastructure
     /// </summary>
     public class AsyncDelegateCommand<T> : IAsyncDelegateCommand<T>
 	{
+        /// <summary>
+        /// Delegate to call when CanExecute method is called.
+        /// </summary>
 		protected readonly Predicate<T> canExecute;
-		protected Func<T, Task> asyncExecute;
+		
+        /// <summary>
+        /// Delegate to call when Execute method is called.
+        /// </summary>
+        protected Func<T, Task> asyncExecute;
+
+        /// <summary>
+        /// Event to raise when the state of the command has changed.
+        /// </summary>
 		public event EventHandler CanExecuteChanged;
 
         /// <summary>

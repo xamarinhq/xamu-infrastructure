@@ -35,8 +35,8 @@ namespace XamarinUniversity.Collections
     /// This is a simple observable collection which has a GroupBy key which can
     /// be used to populate a ListView with grouping turned on
     /// </summary>
-    /// <typeparam name="TKey">The type to use for the grouping key<typeparam name="TKey"/>
-    /// <typeparam name="TValue">The type to use for the items<typeparam name="TKey"/>
+    /// <typeparam name="TKey">The type to use for the grouping key</typeparam>
+    /// <typeparam name="TValue">The type to use for the items</typeparam>
     [DebuggerDisplay ("Count={Count}")]
     public class GroupedObservableCollection<TKey,TValue> 
         : OptimizedObservableCollection<TValue>

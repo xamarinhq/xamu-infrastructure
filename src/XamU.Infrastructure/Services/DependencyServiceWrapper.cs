@@ -35,6 +35,10 @@ namespace XamarinUniversity.Services
     /// </summary>
     public class DependencyServiceWrapper : IDependencyService
     {
+        /// <summary>
+        /// Retrieve a dependency based on the abstraction <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
         public T Get<T>() where T : class
         {
             return DependencyService.Get<T>();

@@ -110,6 +110,10 @@ namespace XamarinUniversity.Infrastructure
         }
         #endregion
 
+        /// <summary>
+        /// Called when this behavior is attached to a visual.
+        /// </summary>
+        /// <param name="bindable">Visual owner</param>
         protected override void OnAttachedTo(Picker bindable)
         {
             base.OnAttachedTo (bindable);
@@ -119,6 +123,10 @@ namespace XamarinUniversity.Infrastructure
             OnSelectedItemChanged(null, SelectedItem);
         }
 
+        /// <summary>
+        /// Called when this behavior is detached from a visual
+        /// </summary>
+        /// <param name="bindable">Visual owner</param>
         protected override void OnDetachingFrom(Picker bindable)
         {
             bindable.SelectedIndexChanged -= OnSelectedIndexChanged;

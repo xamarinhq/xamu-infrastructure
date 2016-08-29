@@ -35,8 +35,19 @@ namespace XamarinUniversity.Infrastructure
     /// </summary>
 	public sealed class DelegateCommand : IDelegateCommand
 	{
+        /// <summary>
+        /// Delegate to call when the Execute method is called.
+        /// </summary>
 		readonly Action<object> command;
+
+        /// <summary>
+        /// Delegate to call when the CanExecute method is called.
+        /// </summary>
 		readonly Func<object, bool> canExecute;
+
+        /// <summary>
+        /// Event to raise when the state of the command has changed.
+        /// </summary>
         public event EventHandler CanExecuteChanged;
 
         /// <summary>
@@ -121,9 +132,20 @@ namespace XamarinUniversity.Infrastructure
     /// </summary>
 	public sealed class DelegateCommand<T> : IDelegateCommand
 	{
-		readonly Action<T> command;
-		readonly Func<T, bool> canExecute;
-		public event EventHandler CanExecuteChanged;
+        /// <summary>
+        /// Delegate to call when the Execute method is called.
+        /// </summary>
+        readonly Action<T> command;
+
+        /// <summary>
+        /// Delegate to call when the CanExecute method is called.
+        /// </summary>
+        readonly Func<T, bool> canExecute;
+
+        /// <summary>
+        /// Event to raise when the state of the command has changed.
+        /// </summary>
+        public event EventHandler CanExecuteChanged;
 
         /// <summary>
         /// Creates a new Delegate command

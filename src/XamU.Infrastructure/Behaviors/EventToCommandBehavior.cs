@@ -147,6 +147,7 @@ namespace XamarinUniversity.Infrastructure
         /// We wire up to a method in this instance named OnEventRaised.
         /// </summary>
         /// <param name="target">Target object</param>
+        /// <param name="eventName">Name of the event to subscribe to</param>
         void Subscribe (object target, string eventName)
         {
             if (target == null || string.IsNullOrEmpty (eventName))
