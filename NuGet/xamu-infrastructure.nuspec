@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata minClientVersion="2.7.2">
+    <id>MVVMHelpers.PCL</id>
+    <version>1.0.150721</version>
+    <authors>Mark Smith</authors>
+    <owners>JulMar Technology,Inc.</owners>
+    <licenseUrl>http://mvvmhelpers.codeplex.com/license</licenseUrl>
+    <projectUrl>http://mvvmhelpers.codeplex.com/</projectUrl>
+    <iconUrl>http://www.julmar.com/images/mvvmHelpers.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MVVM Helpers is a library of classes for WPF, WinRT, WinPRT, Xamarin.iOS and Xamarin.Android to implement the MVVM design pattern. It also includes several Blend behaviors, attached behaviors, extension methods and general .NET classes to aid in the development of .NET applications.</description>
+    <copyright>(C) 2009-2015 JulMar Technology, Inc.</copyright>
+    <language>en-US</language>
+    <tags>mvvm wpf ios xamarin android winrt winprt ui blend behaviors .NET</tags>
+    <dependencies>
+      <group targetFramework="net45" />
+      <group targetFramework="wpa81" />
+      <group targetFramework="win8" />
+      <group targetFramework="monoandroid" />
+      <group targetFramework="monotouch" />
+      <group targetFramework="Xamarin.iOS10" />
+      <group targetFramework="portable-net45+netcore45+wpa81+monotouch+monoandroid" />
+      <!-- Can have dependencies for a specific target
+      <group targetFramework="...">
+        <dependency id="Microsoft.Bcl.Async" version="1.0.165" />
+        <dependency id="Microsoft.Bcl" version="1.1.6" />
+      </group> -->
+    </dependencies>
+  </metadata>
+  <files>
+    <!-- PCL (used for PCL library projects) -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\portable-net45+netcore45+wpa81+monotouch+monoandroid\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\portable-net45+netcore45+wpa81+monotouch+monoandroid\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.PCL.dll" target="lib\portable-net45+netcore45+wpa81+monotouch+monoandroid\MvvmHelpers.Bootstrap.dll" />
+
+    <!-- Desktop (.NET 4.5) -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\net45\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\net45\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.Desktop.dll" target="lib\net45\MvvmHelpers.Bootstrap.dll" />
+    <file src="bin\MvvmHelpers.Desktop.dll" target="lib\net45\MvvmHelpers.Desktop.dll" />
+    <file src="bin\MvvmHelpers.Desktop.xml" target="lib\net45\MvvmHelpers.Desktop.xml" />
+    <file src="dependencies\Desktop\System.Windows.Interactivity.dll" target="lib\net45\System.Windows.Interactivity.dll" />
+    <file src="dependencies\Desktop\Microsoft.Expression.Interactions.dll" target="lib\net45\Microsoft.Expression.Interactions.dll" />
+
+    <!-- Android -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\monoandroid\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\monoandroid\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.Droid.dll" target="lib\monoandroid\MvvmHelpers.Bootstrap.dll" />
+    <file src="bin\MvvmHelpers.Android.dll" target="lib\monoandroid\MvvmHelpers.Android.dll" />
+    <file src="bin\MvvmHelpers.Android.xml" target="lib\monoandroid\MvvmHelpers.Android.xml" />
+
+    <!-- iOS -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\monotouch\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\monotouch\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.iOS.dll" target="lib\monotouch\MvvmHelpers.Bootstrap.dll" />
+    <file src="bin\MvvmHelpers.iOS.dll" target="lib\monotouch\MvvmHelpers.iOS.dll" />
+    <file src="bin\MvvmHelpers.iOS.xml" target="lib\monotouch\MvvmHelpers.iOS.xml" />
+
+    <!-- iOS Unified (64-bit) -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\Xamarin.iOS10\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\Xamarin.iOS10\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.iOS.Unified.dll" target="lib\Xamarin.iOS10\MvvmHelpers.Bootstrap.dll" />
+    <file src="bin\MvvmHelpers.iOS.Unified.dll" target="lib\Xamarin.iOS10\MvvmHelpers.iOS.Unified.dll" />
+    <file src="bin\MvvmHelpers.iOS.Unified.xml" target="lib\Xamarin.iOS10\MvvmHelpers.iOS.Unified.xml" />
+
+    <!-- WinRT -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\win8\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\win8\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.Metro.dll" target="lib\win8\MvvmHelpers.Bootstrap.dll" />
+    <file src="bin\MvvmHelpers.WinRT.dll" target="lib\win8\MvvmHelpers.WinRT.dll" />
+    <file src="bin\MvvmHelpers.WinRT.pri" target="lib\win8\MvvmHelpers.WinRT.pri" />
+    <file src="bin\MvvmHelpers.WinRT.xml" target="lib\win8\MvvmHelpers.WinRT.xml" />
+
+    <!-- WinPRT -->
+    <file src="bin\MvvmHelpers.Core.dll" target="lib\wpa81\MvvmHelpers.Core.dll" />
+    <file src="bin\MvvmHelpers.Core.xml" target="lib\wpa81\MvvmHelpers.Core.xml" />
+    <file src="bin\MvvmHelpers.Bootstrap.WP.dll" target="lib\wpa81\MvvmHelpers.Bootstrap.dll" />
+    <file src="bin\MvvmHelpers.WP.dll" target="lib\wpa81\MvvmHelpers.WP.dll" />
+    <file src="bin\MvvmHelpers.WP.xml" target="lib\wpa81\MvvmHelpers.WP.xml" />
+    <file src="bin\MvvmHelpers.WP.pri" target="lib\wpa81\MvvmHelpers.WP.pri" />
+
+  </files>
+</package>
