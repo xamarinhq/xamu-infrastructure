@@ -6,9 +6,11 @@ The library includes examples of behaviors, MVVM, custom controls, binding value
 
 ## Helpful links
 
-[Documentation](https://github.com/xamarinhq/xamu-infrastructure/wiki)
-[License](https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE)
-[Contribution Guide](https://github.com/xamarinhq/xamu-infrastructure/blob/master/CONTRIBUTING.md)
+* [Documentation](https://github.com/xamarinhq/xamu-infrastructure/wiki)
+
+* [License](https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE)
+
+* [Contribution Guide](https://github.com/xamarinhq/xamu-infrastructure/blob/master/CONTRIBUTING.md)
 
 
 #### Copyright (C) 2016 Xamarin University, Microsoft
