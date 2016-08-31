@@ -24,9 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System;
 using System.Threading.Tasks;
-using Xamarin.Forms;
 
 namespace XamarinUniversity.Interfaces
 {
@@ -35,19 +33,6 @@ namespace XamarinUniversity.Interfaces
     /// </summary>
     public interface INavigationService
     {
-        /// <summary>
-        /// Register a Forms page with a key.
-        /// </summary>
-        /// <param name="pageKey">Page key (string).</param>
-        /// <param name="creator">Creator function to return a Page.</param>
-        void RegisterPage(string pageKey, Func<Page> creator);
-
-        /// <summary>
-        /// Unregister a known page from the navigation system.
-        /// </summary>
-        /// <param name="pageKey">Page key.</param>
-        void UnregisterPage(string pageKey);
-
         /// <summary>
         /// Navigate to a page using the known key.
         /// </summary>
