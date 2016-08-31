@@ -3,12 +3,12 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.160829</version>
+    <version>1.0.160830</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/xamarinhq/xamu-infrastructure</projectUrl>
-    <iconUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/logo.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/xamarinhq/xamu-infrastructure/master/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Set of Xamarin.Forms classes for enterprise and MVVM development; includes markup extensions, behaviors, custom controls and abstractions for MVVM.</description>
     <copyright>Copyright (C) 2016 Xamarin, Microsoft</copyright>
