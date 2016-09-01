@@ -189,7 +189,6 @@ namespace XamarinUniversity.Infrastructure
         /// <summary>
         /// Executes the command.
         /// </summary>
-        /// <returns><c>true</c>, if execute was caned, <c>false</c> otherwise.</returns>
         /// <param name="parameter">Parameter.</param>
 		public async void Execute(object parameter)
 		{
@@ -199,7 +198,15 @@ namespace XamarinUniversity.Infrastructure
         /// <summary>
         /// Executes the command.
         /// </summary>
-        /// <returns><c>true</c>, if execute was caned, <c>false</c> otherwise.</returns>
+        /// <param name="parameter">Parameter.</param>
+        async Task IAsyncDelegateCommand.ExecuteAsync(object parameter)
+        {
+            await asyncExecute ((T)parameter);
+        }
+
+        /// <summary>
+        /// Executes the command.
+        /// </summary>
         /// <param name="parameter">Parameter.</param>
 		public async Task ExecuteAsync(T parameter)
 		{

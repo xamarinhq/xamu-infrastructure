@@ -49,7 +49,7 @@ namespace XamarinUniversity.Infrastructure
     /// </Label>
     /// ]]>-->
     /// </example>
-    public class EventToCommandBehavior : BindingContextBehavior<View>
+    public class EventToCommandBehavior : BindingContextBehavior<VisualElement>
     {
         EventInfo locatedEventInfo;
         Delegate eventHandler;
@@ -124,7 +124,7 @@ namespace XamarinUniversity.Infrastructure
         /// Called when the behavior is attached to an element.
         /// </summary>
         /// <param name="bindable">Object we are attached to</param>
-        protected override void OnAttachedTo (View bindable)
+        protected override void OnAttachedTo (VisualElement bindable)
         {
             base.OnAttachedTo (bindable);
             Subscribe (AssociatedObject, EventName);
@@ -135,7 +135,7 @@ namespace XamarinUniversity.Infrastructure
         /// a visual element.
         /// </summary>
         /// <param name="bindable">Bindable.</param> 
-        protected override void OnDetachingFrom (View bindable)
+        protected override void OnDetachingFrom (VisualElement bindable)
         {
             Unsubscribe ();
             base.OnDetachingFrom (bindable);

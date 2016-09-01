@@ -45,7 +45,7 @@ namespace XamarinUniversity.Infrastructure
     /// <summary>
     /// Extension of ICommand which exposes a raise execute handler.
     /// </summary>
-    public interface IAsyncDelegateCommand<T> : IDelegateCommand
+    public interface IAsyncDelegateCommand<T> : IAsyncDelegateCommand
     {
         /// <summary>
         /// Executes the command and returns the async Task.
