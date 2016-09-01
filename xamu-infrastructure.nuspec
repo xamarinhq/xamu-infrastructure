@@ -20,6 +20,10 @@
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.160903]
+Minor fix to allow EventToCommandBehavior to be used on any VisualElement vs. View
+Change IAsyncDelegateCommand&lt;T&gt; to implement IAsyncDelegateCommand vs. IDelegateCommand.
+
 [1.0.160902]
 Added ImageResourceConverter for bindings to embedded resource images.
 
