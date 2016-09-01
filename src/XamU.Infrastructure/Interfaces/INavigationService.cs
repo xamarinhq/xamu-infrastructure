@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System;
 using System.Threading.Tasks;
 
 namespace XamarinUniversity.Interfaces
@@ -39,7 +40,7 @@ namespace XamarinUniversity.Interfaces
         /// <returns>The async.</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="viewModel">View model.</param>
-        Task NavigateAsync(string pageKey, object viewModel = null);
+        Task NavigateAsync(object pageKey, object viewModel = null);
 
         /// <summary>
         /// Returns true/false whether we can go backwards on the Nav Stack.
@@ -59,7 +60,7 @@ namespace XamarinUniversity.Interfaces
         /// <returns>Async response</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="viewModel">View model.</param>
-        Task PushModalAsync(string pageKey, object viewModel = null);
+        Task PushModalAsync(object pageKey, object viewModel = null);
 
         /// <summary>
         /// Pops the last page off the modal stack

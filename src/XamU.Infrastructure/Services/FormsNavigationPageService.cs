@@ -1,5 +1,5 @@
 //
-// StackNavigationService.cs
+// FormsNavigationPageService.cs
 //
 // Author:
 //       Mark Smith <mark.smith@xamarin.com>
@@ -37,35 +37,84 @@ namespace XamarinUniversity.Services
     /// This understands both <c>NavigationPage</c> and <c>MasterDetailPage</c> with
     /// an embedded navigation page.
     /// </summary>
-    public class StackNavigationService : INavigationService
+    public class FormsNavigationPageService : INavigationService
     {
         private static readonly Task TaskCompleted = Task.FromResult(0);
         private INavigation navigation;
-        readonly Dictionary<string, Func<Page>> registeredPages = new Dictionary<string, Func<Page>>();
+        private Dictionary<object, Func<Page>> registeredPages;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FormsNavigationPageService ()
+        {
+            // If we are using MasterDetailPage as the MainPage, then
+            // hide master page when we navigate on phones since we only look at
+            // the detail page for the navigation root.
+            HideMasterPageOnNavigation = Device.Idiom == TargetIdiom.Phone;
+        }
+
+        /// <summary>
+        /// Allows you to change how keys are compared.
+        /// Must be called _before_ any pages are registered.
+        /// </summary>
+        /// <value>The key comparer.</value>
+        public IEqualityComparer<object> KeyComparer
+        {
+            get
+            {
+                return registeredPages?.Comparer;
+            }
+
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException (nameof(KeyComparer), "KeyComparer cannot be null.");
+                if (registeredPages != null)
+                    throw new InvalidOperationException ("Cannot set KeyComparer once pages are added.");
+                registeredPages = new Dictionary<object, Func<Page>> (value);
+            }
+        }
+
+        /// <summary>
+        /// This flag determines whether to hide the master page when a NavigateAsync
+        /// occurs. The default is TRUE for phones, but you can set this flag to FALSE 
+        /// to turn off this behavior.
+        /// </summary>
+        /// <value><c>true</c> if hide master page on navigation; otherwise, <c>false</c>.</value>
+        public bool HideMasterPageOnNavigation
+        {
+            get; set;
+        }
 
         /// <summary>
         /// Register a page with a known key.
         /// </summary>
         /// <param name="pageKey">Page key.</param>
         /// <param name="creator">Creator.</param>
-	    public void RegisterPage(string pageKey, Func<Page> creator)
+	    public void RegisterPage(object pageKey, Func<Page> creator)
 	    {
-            if (string.IsNullOrEmpty(pageKey))
-                throw new ArgumentNullException("pageKey");
+            if (pageKey == null)
+                throw new ArgumentNullException(nameof(pageKey));
 	        if (creator == null)
-	            throw new ArgumentNullException("creator");
-	        registeredPages.Add(pageKey, creator);
-	    }
+	            throw new ArgumentNullException(nameof (creator));
 
+            if (registeredPages == null)
+                registeredPages = new Dictionary<object, Func<Page>> ();
+   
+            registeredPages.Add(pageKey, creator);
+	    }
+ 
         /// <summary>
         /// Unregister a known page by key.
         /// </summary>
         /// <param name="pageKey">Page key.</param>
-	    public void UnregisterPage(string pageKey)
+        public void UnregisterPage(object pageKey)
 	    {
-            if (string.IsNullOrEmpty(pageKey))
-                throw new ArgumentNullException("pageKey");
-            registeredPages.Remove(pageKey);
+            if (pageKey == null)
+                throw new ArgumentNullException(nameof (pageKey));
+            if (registeredPages != null)
+                registeredPages.Remove(pageKey);
 	    }
 
         /// <summary>
@@ -73,10 +122,13 @@ namespace XamarinUniversity.Services
         /// </summary>
         /// <returns>The page by key.</returns>
         /// <param name="pageKey">Page key.</param>
-        Page GetPageByKey(string pageKey)
+        Page GetPageByKey(object pageKey)
         {
-            if (string.IsNullOrEmpty(pageKey))
-                throw new ArgumentNullException("key");
+            if (pageKey == null)
+                throw new ArgumentNullException (nameof (pageKey));
+
+            if (registeredPages == null)
+                return null;
 
             Func<Page> creator;
             return registeredPages.TryGetValue(pageKey, out creator) ? creator.Invoke() : null;
@@ -86,8 +138,8 @@ namespace XamarinUniversity.Services
         /// Returns the underlying Navigation interface implemented by the
         /// Forms page system.
         /// </summary>
-        /// <value>The navigation.</value>
-        INavigation Navigation
+        /// <value>The INavigation implementation to use for navigation.</value>
+        public INavigation Navigation
         {
             get
             {
@@ -102,16 +154,20 @@ namespace XamarinUniversity.Services
                     MasterDetailPage mdPage = main as MasterDetailPage;
                     if (mdPage != null)
                     {
-                        if (mdPage.Master is NavigationPage)
-                            navigation = mdPage.Master.Navigation;
+                        // Should always have a NavigationPage as the Detail
                         if (mdPage.Detail is NavigationPage)
                             navigation = mdPage.Detail.Navigation;
                     }
 
                     if (navigation == null)
-                        throw new Exception("Failed to locate navigation");
+                        throw new Exception("Failed to locate required NavigationPage from App.MainPage.");
                 }
                 return navigation;
+            }
+
+            set
+            {
+                navigation = value;
             }
         }
 
@@ -122,9 +178,14 @@ namespace XamarinUniversity.Services
         /// <returns>The async.</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="viewModel">View model.</param>
-        public Task NavigateAsync(string pageKey, object viewModel = null)
+        public Task NavigateAsync(object pageKey, object viewModel = null)
         {
-            if (Device.Idiom == TargetIdiom.Phone)
+            if (pageKey == null)
+                throw new ArgumentNullException (nameof (pageKey));
+
+            // On a phone, always hide master page when we navigate since we
+            // will be using the Detail page.
+            if (HideMasterPageOnNavigation)
             {
                 var mdPage = Application.Current.MainPage as MasterDetailPage;
                 if (mdPage != null)
@@ -134,8 +195,9 @@ namespace XamarinUniversity.Services
             }
 
             var page = GetPageByKey(pageKey);
-            if (page == null)
+            if (page == null) {
                 return TaskCompleted;
+            }
 
             if (viewModel != null)
                 page.BindingContext = viewModel;
@@ -170,8 +232,11 @@ namespace XamarinUniversity.Services
         /// <returns>The modal async.</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="viewModel">View model.</param>
-        public Task PushModalAsync(string pageKey, object viewModel = null)
+        public Task PushModalAsync(object pageKey, object viewModel = null)
         {
+            if (pageKey == null)
+                throw new ArgumentNullException (nameof (pageKey));
+
             var page = GetPageByKey(pageKey);
             if (page == null)
                 throw new ArgumentException("Cannot navigate to unregistered page", "pageKey");

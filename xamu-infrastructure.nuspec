@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.160831</version>
+    <version>1.0.160902</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -20,6 +20,16 @@
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.160902]
+Added ImageResourceConverter for bindings to embedded resource images.
+
+[1.0.160901]
+Added NumericValidationBehavior.
+Ensure DebugConverter outputs in RELEASE build.
+Rename NavigationService to FormsNavigationPageService.
+Add HideMasterPageOnNavigation and KeyComparer properties to FormsNavigationPageService
+Change INavigationService/FormsNavigationPageService to use object for pageKey type.
+
 [1.0.160831]
 Fix a typo in AsyncDelegateCommand where it wasn't implementing IAsyncDelegateCommand.
 

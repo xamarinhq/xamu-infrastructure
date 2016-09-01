@@ -54,7 +54,7 @@
     <Compile Include="MarkupExtensions\ImageResourceExtension.cs" />
     <Compile Include="Converters\IntegerToBooleanConverter.cs" />
     <Compile Include="Behaviors\PickerBindBehavior.cs" />
-    <Compile Include="Services\StackNavigationService.cs" />
+    <Compile Include="Services\FormsNavigationPageService.cs" />
     <Compile Include="Collections\OptimizedObservableCollection.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
@@ -70,6 +70,9 @@
     <Compile Include="Behaviors\EventToCommandBehavior.cs" />
     <Compile Include="Behaviors\BindingContextBehavior.cs" />
     <Compile Include="MarkupExtensions\RelativeBindingContext.cs" />
+    <Compile Include="Behaviors\NumericValidationBehavior.cs" />
+    <Compile Include="Services\XamUInfrastructure.cs" />
+    <Compile Include="Converters\ImageResourceConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />

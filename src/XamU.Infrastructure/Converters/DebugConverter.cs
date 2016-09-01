@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#define DEBUG
 using System;
 using System.Diagnostics;
 using Xamarin.Forms;
@@ -71,6 +72,7 @@ namespace XamarinUniversity.Converters
         /// <returns></returns>
         public object ProvideValue(IServiceProvider serviceProvider)
         {
+            Debug.WriteLine("Creating DebugConverter()");
             return this;
         }
     }

@@ -130,7 +130,6 @@ namespace XamarinUniversity.Infrastructure
             Subscribe (AssociatedObject, EventName);
         }
  
-          
         /// <summary>
         /// This is called when the behavior is being removed from
         /// a visual element.
@@ -154,10 +153,9 @@ namespace XamarinUniversity.Infrastructure
                 return;
 
             // Lookup the named event on the associated object.
-            locatedEventInfo = AssociatedType.GetRuntimeEvent (eventName);
+            locatedEventInfo = target.GetType().GetRuntimeEvent (eventName);
             if (locatedEventInfo == null) {
-                Debug.WriteLine ($"EventToCommandBehavior: Event {eventName} not found on {AssociatedType}.");
-                return;
+                throw new Exception($"Event {eventName} not found on {target}.");
             }
 
             // Wire up the event with reflection.
