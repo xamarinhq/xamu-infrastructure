@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.160830</version>
+    <version>1.0.160831</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -20,6 +20,11 @@
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.160831]
+Fix a typo in AsyncDelegateCommand where it wasn't implementing IAsyncDelegateCommand.
+
+[1.0.160830] 
+Remove registration APIs from INavigationService to avoid Page dependency. This is unfortunately a breaking change, but you can just cast the INavigationService back to the real implementation to get to the RegisterPage method as shown in the docs.
     </releaseNotes>
   </metadata>
   <files>

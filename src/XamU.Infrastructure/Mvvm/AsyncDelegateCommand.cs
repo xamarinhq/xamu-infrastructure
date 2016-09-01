@@ -32,7 +32,7 @@ namespace XamarinUniversity.Infrastructure
     /// <summary>
     /// A base ICommand implementation that supports async/await.
     /// </summary>
-	public class AsyncDelegateCommand : IDelegateCommand
+	public class AsyncDelegateCommand : IAsyncDelegateCommand
 	{
         /// <summary>
         /// Delegate to call when CanExecute method is called.
