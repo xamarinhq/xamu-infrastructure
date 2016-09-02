@@ -35,6 +35,16 @@ namespace XamarinUniversity.Interfaces
     public interface INavigationService
     {
         /// <summary>
+        /// Event raised when NavigateAsync is used.
+        /// </summary>
+        event EventHandler Navigated;
+
+        /// <summary>
+        /// Event raised when a GoBackAsync operation occurs.
+        /// </summary>
+        event EventHandler NavigatedBack;
+
+        /// <summary>
         /// Navigate to a page using the known key.
         /// </summary>
         /// <returns>The async.</returns>

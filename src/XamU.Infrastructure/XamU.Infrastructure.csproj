@@ -73,6 +73,9 @@
     <Compile Include="Behaviors\NumericValidationBehavior.cs" />
     <Compile Include="Services\XamUInfrastructure.cs" />
     <Compile Include="Converters\ImageResourceConverter.cs" />
+    <Compile Include="Commands\NavigateBackCommand.cs" />
+    <Compile Include="Commands\NavigationCommands.cs" />
+    <Compile Include="Commands\NavigateToCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -83,6 +86,7 @@
     <Folder Include="MarkupExtensions\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Mvvm\" />
+    <Folder Include="Commands\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Xamarin.Forms.Core">

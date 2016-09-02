@@ -44,6 +44,16 @@ namespace XamarinUniversity.Services
         private Dictionary<object, Func<Page>> registeredPages;
 
         /// <summary>
+        /// Event raised when NavigateAsync is used.
+        /// </summary>
+        public event EventHandler Navigated;
+
+        /// <summary>
+        /// Event raised when a GoBackAsync operation occurs.
+        /// </summary>
+        public event EventHandler NavigatedBack;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public FormsNavigationPageService ()
@@ -135,6 +145,29 @@ namespace XamarinUniversity.Services
         }
 
         /// <summary>
+        /// Method used to locate the NavigationPage - looks either on the 
+        /// MainPage or, in the case of a MasterDetail setup, on the Details page.
+        /// </summary>
+        /// <returns>The navigation page.</returns>
+        NavigationPage FindNavigationPage()
+        {
+            NavigationPage navPage = null;
+
+            // Most of the time this is good.
+            navPage = Application.Current.MainPage as NavigationPage;
+            if (navPage == null)
+            {
+                // Special case for Master/Detail page.
+                MasterDetailPage mdPage = Application.Current.MainPage as MasterDetailPage;
+                if (mdPage != null)
+                    // Should always have a NavigationPage as the Detail
+                    navPage = mdPage.Detail as NavigationPage;
+            }
+
+            return navPage;
+        }
+
+        /// <summary>
         /// Returns the underlying Navigation interface implemented by the
         /// Forms page system.
         /// </summary>
@@ -145,23 +178,20 @@ namespace XamarinUniversity.Services
             {
                 if (navigation == null)
                 {
-                    // Most of the time this is good.
-                    var main = Application.Current.MainPage;
-                    if (main is NavigationPage)
-                        navigation = main.Navigation;
+                    // Locate the navigation page.
+                    var navPage = FindNavigationPage ();
+                    if (navPage == null)
+                        throw new Exception ("Failed to locate required NavigationPage from App.MainPage.");
 
-                    // Special case for Master/Detail page.
-                    MasterDetailPage mdPage = main as MasterDetailPage;
-                    if (mdPage != null)
-                    {
-                        // Should always have a NavigationPage as the Detail
-                        if (mdPage.Detail is NavigationPage)
-                            navigation = mdPage.Detail.Navigation;
-                    }
+                    // Cache off Navigation interface.
+                    navigation = navPage.Navigation;
 
-                    if (navigation == null)
-                        throw new Exception("Failed to locate required NavigationPage from App.MainPage.");
+                    // Wire into navigation events.
+                    navPage.Pushed += OnPagePushed;
+                    navPage.Popped += OnPagePopped;
+                    navPage.PoppedToRoot += OnPagePopped;
                 }
+
                 return navigation;
             }
 
@@ -169,6 +199,27 @@ namespace XamarinUniversity.Services
             {
                 navigation = value;
             }
+        }
+        
+        /// <summary>
+        /// Method called when a page is pushed onto the Navigation stack.
+        /// </summary>
+        /// <param name="sender">NavigationPage</param>
+        /// <param name="e">Details</param>
+        void OnPagePushed (object sender, Xamarin.Forms.NavigationEventArgs e)
+        {
+            Navigated?.Invoke (this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Method called when a page is popped off the Navigation stack,
+        /// or when we pop to root.
+        /// </summary>
+        /// <param name="sender">NavigationPage</param>
+        /// <param name="e">Details</param>
+        void OnPagePopped (object sender, Xamarin.Forms.NavigationEventArgs e)
+        {
+            NavigatedBack?.Invoke (this, EventArgs.Empty);
         }
 
         /// <summary>
