@@ -32,6 +32,19 @@ namespace XamarinUniversity.Interfaces
     public interface IDependencyService
     {
         /// <summary>
+        /// Register a specific type as an abstraction
+        /// </summary>
+        /// <typeparam name="T">The class to register</typeparam>
+        void Register<T> () where T : class, new();
+
+        /// <summary>
+        /// Register a specific abstraction associated to a type.
+        /// </summary>
+        /// <typeparam name="T">The abstraction</typeparam>
+        /// <typeparam name="TImpl">The implementation</typeparam>
+        void Register<T, TImpl> () where T : class where TImpl : class, T, new();
+
+        /// <summary>
         /// Retrieve a specific implementation from the locator.
         /// </summary>
         /// <typeparam name="T">Type to look for</typeparam>

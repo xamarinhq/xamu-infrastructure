@@ -1,5 +1,5 @@
-//
-// DependencyServiceWrapper.cs
+﻿//
+// NavigationCommands.cs
 //
 // Author:
 //       Mark Smith <mark.smith@xamarin.com>
@@ -24,46 +24,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using XamarinUniversity.Interfaces;
-using Xamarin.Forms;
-using System;
-
-namespace XamarinUniversity.Services
+namespace XamarinUniversity.Commands
 {
     /// <summary>
-    /// Wrapper around static Xamarin.Forms DependencyService to allow it to
-    /// be turned into a mockable interface for unit testing.
+    /// Commands which perform common navigation 
     /// </summary>
-    public class DependencyServiceWrapper : IDependencyService
+    public static class NavigationCommands
     {
         /// <summary>
-        /// Retrieve a dependency based on the abstraction <typeparamref name="T"/>.
+        /// Field to hold back nav command
         /// </summary>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public T Get<T>() where T : class
+        static NavigateBackCommand navBackCommand;
+
+        /// <summary>
+        /// A command which performs a NavigationService.GoBack
+        /// </summary>
+        public static NavigateBackCommand GoBack
         {
-            return DependencyService.Get<T>();
+            get
+            {
+                return (navBackCommand != null)
+                    ? navBackCommand
+                    : (navBackCommand = new NavigateBackCommand ());
+            }
         }
 
         /// <summary>
-        /// Register a specific type as an abstraction
+        /// Field to hold fwd nav command
         /// </summary>
-        /// <typeparam name="T">The type to register.</typeparam>
-        public void Register<T> () where T : class, new()
-        {
-            DependencyService.Register<T> ();
-        }
+        static NavigateToCommand navToCommand;
 
         /// <summary>
-        /// Register a type along with an abstraction type.
+        /// A command which performs a NavigationService.Navigate
         /// </summary>
-        /// <typeparam name="T">Abstraction type</typeparam>
-        /// <typeparam name="TImpl">Type to create</typeparam>
-        public void Register<T, TImpl> () 
-            where T : class
-            where TImpl : class, T, new()
-        {
-            DependencyService.Register<T, TImpl> ();
+        public static NavigateToCommand NavigateTo {
+            get {
+                return (navToCommand != null)
+                    ? navToCommand
+                    : (navToCommand = new NavigateToCommand ());
+            }
         }
     }
 }
+

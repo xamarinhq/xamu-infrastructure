@@ -1,5 +1,5 @@
-//
-// DependencyServiceWrapper.cs
+﻿//
+// NavigateToCommand.cs
 //
 // Author:
 //       Mark Smith <mark.smith@xamarin.com>
@@ -24,46 +24,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using XamarinUniversity.Interfaces;
-using Xamarin.Forms;
 using System;
+using System.Windows.Input;
+using XamarinUniversity.Interfaces;
+using XamarinUniversity.Services;
 
-namespace XamarinUniversity.Services
+namespace XamarinUniversity.Commands
 {
     /// <summary>
-    /// Wrapper around static Xamarin.Forms DependencyService to allow it to
-    /// be turned into a mockable interface for unit testing.
+    /// This class implements an ICommand which will use the registered INavigationService
+    /// to perform a NavigateAsync to a specific page
     /// </summary>
-    public class DependencyServiceWrapper : IDependencyService
+    public class NavigateToCommand : ICommand
     {
         /// <summary>
-        /// Retrieve a dependency based on the abstraction <typeparamref name="T"/>.
+        /// Constructor - only allow library to create command.
         /// </summary>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public T Get<T>() where T : class
+        internal NavigateToCommand ()
         {
-            return DependencyService.Get<T>();
         }
 
         /// <summary>
-        /// Register a specific type as an abstraction
+        /// Event raised when the state of the NavigateBackCommand has changed.
         /// </summary>
-        /// <typeparam name="T">The type to register.</typeparam>
-        public void Register<T> () where T : class, new()
+#pragma warning disable 67
+        public event EventHandler CanExecuteChanged;
+#pragma warning restore 67
+
+        /// <summary>
+        /// This is called to determine whether the command can be executed.
+        /// </summary>
+        /// <returns>True if the command is valid</returns>
+        /// <param name="parameter">Parameter.</param>
+        public bool CanExecute (object parameter)
         {
-            DependencyService.Register<T> ();
+            return true;
         }
 
         /// <summary>
-        /// Register a type along with an abstraction type.
+        /// This is called to execute the command.
         /// </summary>
-        /// <typeparam name="T">Abstraction type</typeparam>
-        /// <typeparam name="TImpl">Type to create</typeparam>
-        public void Register<T, TImpl> () 
-            where T : class
-            where TImpl : class, T, new()
+        /// <param name="parameter">Page Key to navigate to</param>
+        public async void Execute (object parameter)
         {
-            DependencyService.Register<T, TImpl> ();
+            if (parameter != null)
+            {
+                var ns = XamUInfrastructure.ServiceLocator.Get<INavigationService> ();
+                if (ns != null) {
+                    await ns.NavigateAsync (parameter);
+                }
+            }
         }
     }
 }
+
