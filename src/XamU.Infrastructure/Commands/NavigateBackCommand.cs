@@ -40,9 +40,10 @@ namespace XamarinUniversity.Commands
         bool monitorNavigationStack;
 
         /// <summary>
-        /// Constructor - only allow library to create command.
+        /// Protected ctor - only allow library to create command
+        /// unless you derive from it. Should alway use NavigationCommands.
         /// </summary>
-        internal NavigateBackCommand ()
+        protected internal NavigateBackCommand ()
         {
         }
 

@@ -38,9 +38,10 @@ namespace XamarinUniversity.Commands
     public class NavigateToCommand : ICommand
     {
         /// <summary>
-        /// Constructor - only allow library to create command.
+        /// Protected ctor - only allow library to create command
+        /// unless you derive from it. Should alway use NavigationCommands.
         /// </summary>
-        internal NavigateToCommand ()
+        protected internal NavigateToCommand ()
         {
         }
 
@@ -55,10 +56,11 @@ namespace XamarinUniversity.Commands
         /// This is called to determine whether the command can be executed.
         /// </summary>
         /// <returns>True if the command is valid</returns>
-        /// <param name="parameter">Parameter.</param>
+        /// <param name="parameter">PageKey to navigate to</param>
         public bool CanExecute (object parameter)
         {
-            return true;
+            // Must have a page key.
+            return parameter != null;
         }
 
         /// <summary>
