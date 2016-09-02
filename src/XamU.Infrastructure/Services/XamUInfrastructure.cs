@@ -1,5 +1,6 @@
 ﻿using XamarinUniversity.Interfaces;
 using System;
+using System.Diagnostics;
 
 namespace XamarinUniversity.Services
 {
@@ -15,40 +16,48 @@ namespace XamarinUniversity.Services
         /// used by the library (and app).
         /// </summary>
         /// <value>The service locator.</value>
-        public static IDependencyService ServiceLocator
-        {
-            get
-            {
-                return serviceLocator != null
+        public static IDependencyService ServiceLocator => serviceLocator != null
                     ? serviceLocator
                     : (serviceLocator = new DependencyServiceWrapper ());
-            }
-
-            set
-            {
-                if (serviceLocator != null)
-                    throw new InvalidOperationException ("Cannot set ServiceLocator property once Init is called.");
-                if (value == null)
-                    throw new ArgumentNullException (nameof(value), "ServiceLocator property cannot be null.");
-                serviceLocator = value;
-            }
-        }
-
 
         /// <summary>
         /// Registers the known services with the ServiceLocator type.
         /// </summary>
         /// <returns>IDependencyService</returns>
-        public static IDependencyService Init()
+        public static IDependencyService Init ()
         {
-            // Get our default locator
-            var locator = ServiceLocator;
+            return Init (null);
+        }
+            
+        /// <summary>
+        /// Registers the known services with the ServiceLocator type.
+        /// </summary>
+        /// <param name="defaultLocator">ServiceLocator, if null, DependencyService is used.</param>
+        /// <returns>IDependencyService</returns>
+        public static IDependencyService Init(IDependencyService defaultLocator)
+        {
+            // If the ServiceLocator has already been set, then something used it before
+            // Init was called. This is not allowed if they are going to change the locator.
+            if (defaultLocator != null 
+                && serviceLocator != null)
+                throw new InvalidOperationException (
+                    "Must call XamUInfrastructure.Init before using any library features; " +
+                    "ServiceLocator has already been set.");
+
+            // Assign the locator; either use the supplied one, or the default
+            // DependencyService version if not supplied.
+            if (defaultLocator == null)
+                defaultLocator = ServiceLocator;
+            else {
+                Debug.Assert (serviceLocator == null);
+                serviceLocator = defaultLocator;
+            }
 
             // Register the services
-            locator.Register<IMessageVisualizerService, FormsMessageVisualizerService> ();
-            locator.Register<INavigationService, FormsNavigationPageService> ();
+            defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService> ();
+            defaultLocator.Register<INavigationService, FormsNavigationPageService> ();
 
-            return locator;
+            return defaultLocator;
         }
     }
 }

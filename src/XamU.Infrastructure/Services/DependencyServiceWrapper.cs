@@ -26,7 +26,6 @@
 
 using XamarinUniversity.Interfaces;
 using Xamarin.Forms;
-using System;
 
 namespace XamarinUniversity.Services
 {
