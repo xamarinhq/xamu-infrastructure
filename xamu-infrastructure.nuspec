@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.160916</version>
+    <version>1.0.160930</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -16,11 +16,17 @@
     <tags>mvvm ios xamarin xamarin.forms android winphone uwp windows behaviors XAML</tags>
     <dependencies>
         <group>
-            <dependency id="Xamarin.Forms" version="2.3.1.114" />
-            <dependency id="XamarinUniversity.Core" version="1.0.160916" />
+            <dependency id="Xamarin.Forms" version="2.3.1.127" />
+            <dependency id="XamarinUniversity.Core" version="1.0.160930" />
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.160930]
+Added EffectBehavior from David Britch.
+Added support to DependencyServiceWrapper to register instances.
+Added support to DependencyServiceWrapper to create unregistered non-abstract types (e.g. IoC).
+Added two new versions of XamUInfrastructure.Init to support turning off default service registrations.
+
 [1.0.160916]
 Split out XamU.Core assembly which does not require Xamarin.Forms dependency.
 

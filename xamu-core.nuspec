@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Core Library</title>
     <id>XamarinUniversity.Core</id>
-    <version>1.0.160916</version>
+    <version>1.0.160930</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -16,6 +16,9 @@
     <tags>mvvm ios xamarin android winphone uwp windows</tags>
     <dependencies />
     <releaseNotes>
+[1.0.160930]
+Added new Register method to IDependencyService to allow instance registration.
+
 [1.0.160916]
 Initial release - broken out from XamU.Infrastructure.dll with no dependencies on Xamarin.Forms.
     </releaseNotes>
