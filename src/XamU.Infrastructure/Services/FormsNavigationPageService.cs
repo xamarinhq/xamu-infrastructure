@@ -42,6 +42,7 @@ namespace XamarinUniversity.Services
         private static readonly Task TaskCompleted = Task.FromResult(0);
         private INavigation navigation;
         private Dictionary<object, Func<Page>> registeredPages;
+        private Dictionary<object, Action<object>> registeredActions;
 
         /// <summary>
         /// Event raised when NavigateAsync is used.
@@ -114,17 +115,52 @@ namespace XamarinUniversity.Services
    
             registeredPages.Add(pageKey, creator);
 	    }
- 
+
         /// <summary>
-        /// Unregister a known page by key.
+        /// Registers an action in response to a navigation request.
         /// </summary>
-        /// <param name="pageKey">Page key.</param>
-        public void UnregisterPage(object pageKey)
+        /// <param name="key">Key</param>
+        /// <param name="action">Action to perform, gets passed the viewModel parameter.</param>
+        public void RegisterAction(object key, Action<object> action)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (registeredActions == null)
+                registeredActions = new Dictionary<object, Action<object>>();
+            registeredActions.Add(key, action);
+        }
+
+        /// <summary>
+        /// Registers an action in response to a navigation request.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="action">Action to perform</param>
+        public void RegisterAction(object key, Action action)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            if (registeredActions == null)
+                registeredActions = new Dictionary<object, Action<object>>();
+            registeredActions.Add(key, unused => action());
+        }
+
+        /// <summary>
+        /// Unregister a known page/action by key.
+        /// </summary>
+        /// <param name="key">Page key.</param>
+        public void Unregister(object key)
 	    {
-            if (pageKey == null)
-                throw new ArgumentNullException(nameof (pageKey));
-            if (registeredPages != null)
-                registeredPages.Remove(pageKey);
+            if (key == null)
+                throw new ArgumentNullException(nameof (key));
+
+            registeredPages?.Remove(key);
+	        registeredActions?.Remove(key);
 	    }
 
         /// <summary>
@@ -226,7 +262,7 @@ namespace XamarinUniversity.Services
         /// Navigate to a page using the passed key. This also assigns the
         /// BindingContext if a ViewModel is passed.
         /// </summary>
-        /// <returns>The async.</returns>
+        /// <returns>Task representing the navigation</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="viewModel">View model.</param>
         public Task NavigateAsync(object pageKey, object viewModel = null)
@@ -245,8 +281,17 @@ namespace XamarinUniversity.Services
                 }
             }
 
+            // Look for a registered page first. If that's not available, look for an action.
             var page = GetPageByKey(pageKey);
             if (page == null) {
+                if (registeredActions != null)
+                {
+                    Action<object> work;
+                    if (registeredActions.TryGetValue(pageKey, out work))
+                    {
+                        work.Invoke(viewModel);
+                    }
+                }
                 return TaskCompleted;
             }
 
@@ -260,18 +305,12 @@ namespace XamarinUniversity.Services
         /// True if we can go backwards on the navigation stack.
         /// </summary>
         /// <value><c>true</c> if can go back; otherwise, <c>false</c>.</value>
-        public bool CanGoBack
-        {
-            get
-            {
-                return Navigation.NavigationStack.Count > 1;
-            }
-        }
+        public bool CanGoBack => Navigation.NavigationStack.Count > 1;
 
         /// <summary>
         /// Pops the last page off the stack.
         /// </summary>
-        /// <returns>The back async.</returns>
+        /// <returns>Task representing the navigation event.</returns>
         public Task GoBackAsync()
         {
             return !CanGoBack ? TaskCompleted : Navigation.PopAsync();
@@ -280,7 +319,7 @@ namespace XamarinUniversity.Services
         /// <summary>
         /// Pushes a new page modally onto the navigation stack.
         /// </summary>
-        /// <returns>The modal async.</returns>
+        /// <returns>Task representing the modal navigation.</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="viewModel">View model.</param>
         public Task PushModalAsync(object pageKey, object viewModel = null)
@@ -301,7 +340,7 @@ namespace XamarinUniversity.Services
         /// <summary>
         /// Pops a page off the modal stack.
         /// </summary>
-        /// <returns>The modal async.</returns>
+        /// <returns>Task representing the navigation.</returns>
         public Task PopModalAsync()
         {
             return Navigation.PopModalAsync();
