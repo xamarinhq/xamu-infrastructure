@@ -60,6 +60,7 @@
     <Compile Include="Commands\NavigateBackCommand.cs" />
     <Compile Include="Commands\NavigationCommands.cs" />
     <Compile Include="Commands\NavigateToCommand.cs" />
+    <Compile Include="Behaviors\EffectBehavior.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controls\" />
