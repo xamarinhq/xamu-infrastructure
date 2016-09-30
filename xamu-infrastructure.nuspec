@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.160930</version>
+    <version>1.0.160931</version>
     <authors>Mark Smith - @marksm, Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -21,6 +21,9 @@
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.160931]
+Added new RegisterAction methods to FormsNavigationPageService to register actions (vs. pages) for navigation behavior that does not result in a NavigationPage navigation.
+
 [1.0.160930]
 Added EffectBehavior from David Britch.
 Added support to DependencyServiceWrapper to register instances.
