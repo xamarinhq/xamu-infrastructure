@@ -37,7 +37,7 @@ namespace XamarinUniversity.Converters
     /// an event to then pass into an ICommand as the parameter.
     /// </summary>
     /// <example>
-    /// <![CDATA[
+    /// <!--[CDATA[
     /// <ListView ...>
     ///    <ListView.Behaviors>
     ///        <inf:EventToCommandBehavior Command = "{Binding TheCommand}" EventName="ItemTapped">
@@ -47,7 +47,8 @@ namespace XamarinUniversity.Converters
     ///        </inf:EventToCommandBehavior>
     ///    </ListView.Behaviors>
     /// </ListView>
-    /// ]]></example>
+    /// ]]>-->
+    /// </example>
     public class EventArgsConverter : IValueConverter
     {
         /// <summary>

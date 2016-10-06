@@ -45,6 +45,13 @@ namespace XamarinUniversity.Interfaces
         void Register<T, TImpl> () where T : class where TImpl : class, T, new();
 
         /// <summary>
+        /// Register a specific instance of an abstraction.
+        /// </summary>
+        /// <typeparam name="T">Abstraction type</typeparam>
+        /// <param name="impl">Instance to use</param>
+        void Register<T>(T impl);
+
+        /// <summary>
         /// Retrieve a specific implementation from the locator.
         /// </summary>
         /// <typeparam name="T">Type to look for</typeparam>

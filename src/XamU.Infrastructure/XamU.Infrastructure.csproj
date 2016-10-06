@@ -28,7 +28,8 @@
     <DocumentationFile>bin\Debug\XamU.Infrastructure.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType></DebugType>
+    <DebugType>
+    </DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -61,15 +62,9 @@
     <Compile Include="Commands\NavigationCommands.cs" />
     <Compile Include="Commands\NavigateToCommand.cs" />
     <Compile Include="Converters\EventArgsConverter.cs" />
+    <Compile Include="Behaviors\EffectBehavior.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Converters\" />
-    <Folder Include="MarkupExtensions\" />
-    <Folder Include="Behaviors\" />
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\XamU.Core\XamU.Core.csproj">
       <Project>{8F2F8275-08CE-4884-8BFA-F059EEE2BB1C}</Project>

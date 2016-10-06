@@ -5,6 +5,22 @@ using System.Diagnostics;
 namespace XamarinUniversity.Services
 {
     /// <summary>
+    /// Identifies which services you want to register during the Init call.
+    /// </summary>
+    [Flags]
+    public enum RegisterBehavior
+    {
+        /// <summary>
+        /// Register the default (Forms) navigation service
+        /// </summary>
+        Navigation,
+        /// <summary>
+        /// Register the default (Forms) message visualizer
+        /// </summary>
+        MessageVisualizer
+    }
+
+    /// <summary>
     /// Static class to initialize the library
     /// </summary>
     public static class XamUInfrastructure
@@ -26,15 +42,37 @@ namespace XamarinUniversity.Services
         /// <returns>IDependencyService</returns>
         public static IDependencyService Init ()
         {
-            return Init (null);
+            return Init(null);
         }
-            
+
+        /// <summary>
+        /// Register the known services with the ServiceLocator type.
+        /// </summary>
+        /// <param name="defaultLocator">Service locator</param>
+        /// <returns>IDependencyService</returns>
+        public static IDependencyService Init(IDependencyService defaultLocator)
+        {
+            return Init(defaultLocator, 
+                RegisterBehavior.MessageVisualizer | RegisterBehavior.Navigation);
+        }
+
+        /// <summary>
+        /// Register the known services with the ServiceLocator type.
+        /// </summary>
+        /// <param name="registerBehavior">Services to register</param>
+        /// <returns>IDependencyService</returns>
+        public static IDependencyService Init(RegisterBehavior registerBehavior)
+        {
+            return Init(null, registerBehavior);
+        }
+
         /// <summary>
         /// Registers the known services with the ServiceLocator type.
         /// </summary>
         /// <param name="defaultLocator">ServiceLocator, if null, DependencyService is used.</param>
+        /// <param name="registerBehavior">Registration behavior</param>
         /// <returns>IDependencyService</returns>
-        public static IDependencyService Init(IDependencyService defaultLocator)
+        public static IDependencyService Init(IDependencyService defaultLocator, RegisterBehavior registerBehavior)
         {
             // If the ServiceLocator has already been set, then something used it before
             // Init was called. This is not allowed if they are going to change the locator.
@@ -54,8 +92,12 @@ namespace XamarinUniversity.Services
             }
 
             // Register the services
-            defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService> ();
-            defaultLocator.Register<INavigationService, FormsNavigationPageService> ();
+            if (registerBehavior.HasFlag(RegisterBehavior.MessageVisualizer))
+                defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService>();
+            if (registerBehavior.HasFlag(RegisterBehavior.Navigation))
+                defaultLocator.Register<INavigationService, FormsNavigationPageService>();
+
+            defaultLocator.Register<IDependencyService>(defaultLocator);
 
             return defaultLocator;
         }
