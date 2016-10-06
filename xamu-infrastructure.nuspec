@@ -3,8 +3,8 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.160931</version>
-    <authors>Mark Smith - @marksm, Xamarin University</authors>
+    <version>1.0.161006</version>
+    <authors>Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/xamarinhq/xamu-infrastructure</projectUrl>
@@ -21,6 +21,9 @@
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.161006]
+Added EventArgsConverter to provide a generic way to pull out a single field/property for the EventToCommandBehavior.
+
 [1.0.160931]
 Added new RegisterAction methods to FormsNavigationPageService to register actions (vs. pages) for navigation behavior that does not result in a NavigationPage navigation.
 
