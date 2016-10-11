@@ -45,6 +45,14 @@ namespace XamarinUniversity.Converters
         public string Prefix { get; set; }
 
         /// <summary>
+        /// A type in the same assembly as the image. This 
+        /// is a required property set if you are in a UWP application
+        /// and using .NET Native
+        /// </summary>
+        /// <value>The assembly.</value>
+        public Type ResolvingType { get; set; }
+
+        /// <summary>
         /// Convert a string-based value into an embedded resource
         /// </summary>
         /// <param name="value">Resource ID</param>
@@ -69,8 +77,10 @@ namespace XamarinUniversity.Converters
                     && !prefix.EndsWith (".", StringComparison.Ordinal))
                 prefix += ".";
 
-            return ImageSource.FromResource(prefix + resourceId);
-		}
+            return ResolvingType != null 
+                ? ImageSource.FromResource (prefix + resourceId, ResolvingType) 
+                : ImageSource.FromResource (prefix + resourceId);
+        }
 
         /// <summary>
         /// Used to convert a value from target > source; not used for this converter.
