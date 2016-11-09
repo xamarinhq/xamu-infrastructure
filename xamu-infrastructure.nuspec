@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.161006</version>
+    <version>1.0.161104</version>
     <authors>Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -17,10 +17,13 @@
     <dependencies>
         <group>
             <dependency id="Xamarin.Forms" version="2.3.1.127" />
-            <dependency id="XamarinUniversity.Core" version="1.0.160930" />
+            <dependency id="XamarinUniversity.Core" version="1.0.161104" />
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.161104]
+Unify versions
+   
 [1.0.161006]
 Added EventArgsConverter to provide a generic way to pull out a single field/property for the EventToCommandBehavior.
 
