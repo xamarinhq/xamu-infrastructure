@@ -126,7 +126,7 @@ namespace XamarinUniversity.Services
         /// </summary>
         /// <typeparam name="T">Type to register</typeparam>
         /// <param name="impl">Implementation</param>
-        public void Register<T>(T impl)
+        public void Register<T>(T impl) where T : class
         {
             DependencyInstances.Add(typeof(T), impl);
         }
