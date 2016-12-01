@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.161128</version>
+    <version>1.0.161201</version>
     <authors>Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -17,11 +17,11 @@
     <dependencies>
         <group>
             <dependency id="Xamarin.Forms" version="2.3.1.127" />
-            <dependency id="XamarinUniversity.Core" version="1.0.161104" />
+            <dependency id="XamarinUniversity.Core" version="1.0.161128" />
         </group>
     </dependencies>
     <releaseNotes>
-[1.0.161128]
+[1.0.161201]
 Add class constraint to Register method of IDependencyService
 
 [1.0.161104]
