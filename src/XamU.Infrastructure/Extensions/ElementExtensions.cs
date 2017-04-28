@@ -99,6 +99,58 @@ namespace XamarinUniversity.Infrastructure
 
             return TryFindResource<T> (view.Parent as VisualElement, name, out resource);
         }
+
+        /// <summary>
+        /// This walks the Xamarin.Forms logical tree and enumerates an object and any content/children.
+        /// </summary>
+        /// <param name="parentElement">Starting element</param>
+        /// <returns>Enumerated list of element + children/content</returns>
+        public static IEnumerable<Element> EnumerateLogicalTree(this Element parentElement)
+        {
+            if (parentElement == null)
+                yield break;
+
+            // Return the current value.
+            yield return parentElement;
+
+            Type parentType = parentElement.GetType();
+            var props = parentType.GetRuntimeProperties();
+
+            string contentProperty;
+            var cpa = parentType.GetTypeInfo().GetCustomAttribute<ContentPropertyAttribute>();
+            if (cpa != null)
+                contentProperty = cpa.Name;
+            else
+                contentProperty = nameof(ContentPage.Content);
+
+            var contProp = props.SingleOrDefault(w => w.Name == contentProperty);
+            if (contProp != null)
+            {
+                var result = contProp.GetValue(parentElement);
+                var elementResult = result as Element;
+                if (elementResult != null)
+                {
+                    foreach (var vi in EnumerateLogicalTree(elementResult))
+                        yield return vi;
+                }
+                else
+                {
+                    var enumResult = result as IEnumerable;
+                    if (enumResult != null)
+                    {
+                        foreach (var item in enumResult)
+                        {
+                            if (item is Element)
+                            {
+                                foreach (var vi in EnumerateLogicalTree((Element)item))
+                                    yield return vi;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
 
