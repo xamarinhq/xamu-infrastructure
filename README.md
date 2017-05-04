@@ -1,5 +1,7 @@
 # Xamarin University Infrastructure Library
 
+[![Build Status](https://travis-ci.org/xamarinhq/xamu-infrastructure.svg?branch=master)](https://travis-ci.org/xamarinhq/xamu-infrastructure)
+
 This is a set of useful classes for Xamarin and Xamarin.Forms development which are used in a varity of labs in Xamarin University.
 
 You can use it in source form by cloning this repository (or just grabbing the pieces you want to use), or as a binary through two NuGet packages: [Core](https://www.nuget.org/packages/XamarinUniversity.Core/) and [Infrastructure](https://www.nuget.org/packages/XamarinUniversity.Infrastructure/) which also adds Core. 

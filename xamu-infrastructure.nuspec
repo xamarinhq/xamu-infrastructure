@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.161201</version>
+    <version>1.0.170503</version>
     <authors>Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -11,16 +11,19 @@
     <iconUrl>https://raw.githubusercontent.com/xamarinhq/xamu-infrastructure/master/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Set of Xamarin.Forms classes for enterprise and MVVM development; includes markup extensions, behaviors, custom controls and abstractions for MVVM.</description>
-    <copyright>Copyright (C) 2016 Xamarin, Microsoft</copyright>
+    <copyright>Copyright (C) 2016-2017 Xamarin, Microsoft</copyright>
     <summary>Set of Xamarin.Forms classes for enterprise and MVVM development.</summary>
     <tags>mvvm ios xamarin xamarin.forms android winphone uwp windows behaviors XAML</tags>
     <dependencies>
         <group>
-            <dependency id="Xamarin.Forms" version="2.3.1.127" />
+            <dependency id="Xamarin.Forms" version="2.3.4.231" />
             <dependency id="XamarinUniversity.Core" version="1.0.161128" />
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.170503]
+Added Visual Tree extension to Element type.
+
 [1.0.161201]
 Add class constraint to Register method of IDependencyService
 
@@ -64,7 +67,7 @@ Remove registration APIs from INavigationService to avoid Page dependency. This 
     </releaseNotes>
   </metadata>
   <files>
-    <file src="src/XamU.Infrastructure/bin/release/XamU.Infrastructure.dll" target="lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10/XamU.Infrastructure.dll" />
-    <file src="src/XamU.Infrastructure/bin/release/XamU.Infrastructure.xml" target="lib/portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10/XamU.Infrastructure.xml" />
+    <file src="src\XamU.Infrastructure\bin\release\XamU.Infrastructure.dll" target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10\" />
+    <file src="src\XamU.Infrastructure\bin\release\XamU.Infrastructure.xml" target="lib\portable-net45+wp8+wpa81+win8+MonoAndroid10+MonoTouch10+Xamarin.iOS10+UAP10\" />
   </files>
 </package>
