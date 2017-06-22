@@ -3,7 +3,7 @@
   <metadata minClientVersion="2.8.1">
     <title>Xamarin University Infrastructure Library</title>
     <id>XamarinUniversity.Infrastructure</id>
-    <version>1.0.170503</version>
+    <version>1.0.170620</version>
     <authors>Xamarin University</authors>
     <owners>Xamarin University, Microsoft</owners>
     <licenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</licenseUrl>
@@ -21,6 +21,9 @@
         </group>
     </dependencies>
     <releaseNotes>
+[1.0.170620]
+Added ColorExtensions to convert a Color to string and back.
+
 [1.0.170503]
 Added Visual Tree extension to Element type.
 

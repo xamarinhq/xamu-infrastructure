@@ -38,6 +38,7 @@
     <DocumentationFile>bin\Release\XamU.Infrastructure.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Services\DependencyServiceWrapper.cs" />
     <Compile Include="Services\FormsMessageVisualizerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
