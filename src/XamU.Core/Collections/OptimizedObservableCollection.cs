@@ -51,7 +51,7 @@ namespace XamarinUniversity.Infrastructure
     [DebuggerDisplay ("Count={Count}")]
     public class OptimizedObservableCollection<T> : ObservableCollection<T>
     {
-        bool shouldRaiseNotifications;
+        bool shouldRaiseNotifications = true;
 
         /// <summary> 
         /// Init a new instance of the collection.
