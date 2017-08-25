@@ -211,6 +211,11 @@ namespace XamarinUniversity.Controls
             var itemStyle = ItemStyle;
             var template = ItemTemplate;
             var visuals = stack.Children;
+            
+            for (int i = 0; i < this.stack.Children.Count; i++)
+            {
+                this.stack.Children[i].IsVisible = i < newValue.Count;
+            }
 
             for (int i = 0; i < newValue.Count; i++) {
                 var dataItem = newValue [i];
