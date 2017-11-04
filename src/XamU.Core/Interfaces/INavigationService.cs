@@ -45,6 +45,11 @@ namespace XamarinUniversity.Interfaces
         event EventHandler NavigatedBack;
 
         /// <summary>
+        /// Pops all pages off the stack up to the first one.
+        /// </summary>
+        Task PopToRootAsync();
+
+        /// <summary>
         /// Navigate to a page using the known key.
         /// </summary>
         /// <returns>The async.</returns>

@@ -1,99 +1,86 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XamarinUniversity</RootNamespace>
-    <AssemblyName>XamU.Infrastructure</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+    <TargetFrameworks>netstandard1.4;portable-net45+netcore45+wpa81;MonoAndroid70;Xamarin.iOS10;uap10.0</TargetFrameworks>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <Version>1.0.1</Version>
+    <PackageTitle>XamarinUniversity.Infrastructure</PackageTitle>
+    <Title>Xamarin University Infrastructure Library</Title>
+    <Authors>Microsoft, Xamarin University</Authors>
+    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <PackageLicenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/xamarinhq/xamu-infrastructure</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/xamarinhq/xamu-infrastructure/master/logo.png</PackageIconUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>This library provides a set of Xamarin.Forms classes for enterprise and MVVM development; includes markup extensions, behaviors, custom controls and abstractions for MVVM.</Description>
+    <Summary>Set of Xamarin.Forms classes for enterprise and MVVM development.</Summary>
+    <PackageReleaseNotes>https://github.com/xamarinhq/xamu-infrastructure/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/xamarinhq/xamu-infrastructure</RepositoryUrl>
+    <PackageTags>mvvm;ios;xamarin;android;winphone;uwp;windows;wpf;macos</PackageTags>
+    <GenerateDocumentationFile Condition=" '$(Configuration)' == 'Release' ">true</GenerateDocumentationFile>
+    <!-- Workaround until Xamarin supports PPDB -->
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\XamU.Infrastructure.xml</DocumentationFile>
+    <RootNamespace>XamarinUniversity</RootNamespace>
+    <Company>Microsoft, Xamarin University</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Copyright (C) 2017 Microsoft, Xamarin University</Copyright>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>
-    </DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\XamU.Infrastructure.xml</DocumentationFile>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'portable-net45+netcore45+wpa81' ">
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <DefineConstants>$(DefineConstants);PLATFORM_PCL</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'MonoAndroid70' ">
+    <TargetFrameworkIdentifier>MonoAndroid</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v7.0</TargetFrameworkVersion>
+    <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+    <LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</LanguageTargets>
+    <DefineConstants>$(DefineConstants);PLATFORM_ANDROID</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'Xamarin.iOS10' ">
+    <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v1.0</TargetFrameworkVersion>
+    <LanguageTargets>$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets</LanguageTargets>
+    <DefineConstants>$(DefineConstants);PLATFORM_IOS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <NugetTargetMoniker>UAP,Version=v10.0</NugetTargetMoniker>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <LanguageTargets>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</LanguageTargets>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="Extensions\ColorExtensions.cs" />
-    <Compile Include="Services\DependencyServiceWrapper.cs" />
-    <Compile Include="Services\FormsMessageVisualizerService.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="NamedDataTemplateSelector.cs" />
-    <Compile Include="Controls\ItemsControl.cs" />
-    <Compile Include="Extensions\ElementExtensions.cs" />
-    <Compile Include="Converters\DebugConverter.cs" />
-    <Compile Include="Converters\NotBooleanConverter.cs" />
-    <Compile Include="Converters\NullOrEmptyBooleanConverter.cs" />
-    <Compile Include="MarkupExtensions\ImageResourceExtension.cs" />
-    <Compile Include="Converters\IntegerToBooleanConverter.cs" />
-    <Compile Include="Behaviors\PickerBindBehavior.cs" />
-    <Compile Include="Services\FormsNavigationPageService.cs" />
-    <Compile Include="MarkupExtensions\DependencyServiceExtension.cs" />
-    <Compile Include="Behaviors\EventToCommandBehavior.cs" />
-    <Compile Include="Behaviors\BindingContextBehavior.cs" />
-    <Compile Include="MarkupExtensions\RelativeBindingContext.cs" />
-    <Compile Include="Behaviors\NumericValidationBehavior.cs" />
-    <Compile Include="Services\XamUInfrastructure.cs" />
-    <Compile Include="Converters\ImageResourceConverter.cs" />
-    <Compile Include="Commands\NavigateBackCommand.cs" />
-    <Compile Include="Commands\NavigationCommands.cs" />
-    <Compile Include="Commands\NavigateToCommand.cs" />
-    <Compile Include="Converters\EventArgsConverter.cs" />
-    <Compile Include="Behaviors\EffectBehavior.cs" />
+    <PackageReference Include="MSBuild.Sdk.Extras" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Xamarin.Forms" Version="2.4.0.38779" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\XamU.Core\XamU.Core.csproj">
-      <Project>{8F2F8275-08CE-4884-8BFA-F059EEE2BB1C}</Project>
-      <Name>XamU.Core</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\XamU.Core\XamU.Core.csproj" />
   </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0' ">
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="5.4.1" />
+    <PackageReference Include="System.ComponentModel" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4' ">
+    <PackageReference Include="System.ComponentModel" Version="4.0.1" />
+  </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
-    </Reference>
+    <Folder Include="Resources\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="..\..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
-  <Import Project="packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
-  <Import Project="..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.3.1.114\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
-  <Import Project="..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets'))" />
-  </Target>
+
+  <Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />
+
 </Project>

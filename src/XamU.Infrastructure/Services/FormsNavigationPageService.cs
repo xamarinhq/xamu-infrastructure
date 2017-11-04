@@ -345,6 +345,15 @@ namespace XamarinUniversity.Services
         {
             return Navigation.PopModalAsync();
         }
+
+        /// <summary>
+        /// Pops all pages up to the final root page
+        /// </summary>
+        /// <returns>Task representing the navigation</returns>
+        public Task PopToRootAsync()
+        {
+            return Navigation.PopToRootAsync();
+        }
     }
 }
 
