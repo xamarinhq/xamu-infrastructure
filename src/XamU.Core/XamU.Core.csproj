@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.4;portable-net45+netcore45+wpa81;MonoAndroid70;Xamarin.iOS10;uap10.0</TargetFrameworks>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <PackageTitle>XamarinUniversity.Core</PackageTitle>
     <Title>Xamarin University Core Library</Title>
     <Authors>Microsoft, Xamarin University</Authors>
