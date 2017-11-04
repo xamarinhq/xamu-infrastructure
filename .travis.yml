@@ -1,2 +1,11 @@
-language: csharp
 solution: src/XamU.Infrastructure.sln
+language: csharp
+dist: trusty
+sudo: required
+mono: none
+dotnet: 2.0.0
+script:
+  - cd src/XamU.Core
+  - dotnet build -c Release XamU.Core.csproj
+  - cd ../XamU.Infrastructure
+  - dotnet build -c Release XamU.Infrastructure.csproj

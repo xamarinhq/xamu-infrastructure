@@ -7,7 +7,7 @@
     <PackageTitle>XamarinUniversity.Infrastructure</PackageTitle>
     <Title>Xamarin University Infrastructure Library</Title>
     <Authors>Microsoft, Xamarin University</Authors>
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <Product>Xamarin University Infrastructure Library</Product>
     <PackageLicenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/xamarinhq/xamu-infrastructure</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/xamarinhq/xamu-infrastructure/master/logo.png</PackageIconUrl>
@@ -24,6 +24,7 @@
     <Company>Microsoft, Xamarin University</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright (C) 2017 Microsoft, Xamarin University</Copyright>
+    <PackageId>XamarinUniversity.Infrastructure</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'portable-net45+netcore45+wpa81' ">

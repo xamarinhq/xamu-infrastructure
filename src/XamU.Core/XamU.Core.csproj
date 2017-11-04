@@ -7,7 +7,7 @@
     <PackageTitle>XamarinUniversity.Core</PackageTitle>
     <Title>Xamarin University Core Library</Title>
     <Authors>Microsoft, Xamarin University</Authors>
-    <Product>$(AssemblyName) ($(TargetFramework))</Product>
+    <Product>Xamarin University Core Library</Product>
     <PackageLicenseUrl>https://github.com/xamarinhq/xamu-infrastructure/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/xamarinhq/xamu-infrastructure</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/xamarinhq/xamu-infrastructure/master/logo.png</PackageIconUrl>
@@ -24,6 +24,7 @@
     <Company>Microsoft, Xamarin University</Company>
     <Copyright>Copyright (C) 2017 Microsoft, Xamarin University</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>XamarinUniversity.Core</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'portable-net45+netcore45+wpa81' ">
