@@ -42,7 +42,7 @@ namespace XamarinUniversity.Services
         /// <returns>IDependencyService</returns>
         public static IDependencyService Init ()
         {
-            return Init(null);
+            return Init(null, RegisterBehavior.MessageVisualizer | RegisterBehavior.Navigation);
         }
 
         /// <summary>
@@ -95,7 +95,13 @@ namespace XamarinUniversity.Services
             if (registerBehavior.HasFlag(RegisterBehavior.MessageVisualizer))
                 defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService>();
             if (registerBehavior.HasFlag(RegisterBehavior.Navigation))
-                defaultLocator.Register<INavigationService, FormsNavigationPageService>();
+            {
+                // Use a single instance for the navigation service and
+                // register both interfaces against it.
+                var navService = new FormsNavigationPageService();
+                defaultLocator.Register<INavigationPageService>(navService);
+                defaultLocator.Register<INavigationService>(navService);
+            }
 
             defaultLocator.Register<IDependencyService>(defaultLocator);
 

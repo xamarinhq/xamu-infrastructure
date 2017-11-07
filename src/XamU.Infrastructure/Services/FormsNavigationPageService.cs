@@ -37,11 +37,12 @@ namespace XamarinUniversity.Services
     /// This understands both <c>NavigationPage</c> and <c>MasterDetailPage</c> with
     /// an embedded navigation page.
     /// </summary>
-    public class FormsNavigationPageService : INavigationService
+    public class FormsNavigationPageService : INavigationPageService
     {
         private static readonly Task TaskCompleted = Task.FromResult(0);
         private INavigation navigation;
         private Dictionary<object, Func<Page>> registeredPages;
+        private Dictionary<object, Func<object, Page>> registeredStatePages;
         private Dictionary<object, Action<object>> registeredActions;
 
         /// <summary>
@@ -84,6 +85,7 @@ namespace XamarinUniversity.Services
                 if (registeredPages != null)
                     throw new InvalidOperationException ("Cannot set KeyComparer once pages are added.");
                 registeredPages = new Dictionary<object, Func<Page>> (value);
+                registeredStatePages = new Dictionary<object, Func<object, Page>>(value);
             }
         }
 
@@ -99,7 +101,8 @@ namespace XamarinUniversity.Services
         }
 
         /// <summary>
-        /// Register a page with a known key.
+        /// Register a page with a known key. When the page is
+        /// navigated to, the optional state will be set as the BindingContext.
         /// </summary>
         /// <param name="pageKey">Page key.</param>
         /// <param name="creator">Creator.</param>
@@ -115,6 +118,26 @@ namespace XamarinUniversity.Services
    
             registeredPages.Add(pageKey, creator);
 	    }
+
+        /// <summary>
+        /// Register a page with a known key that is created with a state element.
+        /// When the page is created/navigated to, the state may be used to initialize
+        /// the page. It will not be set as the BindingContext.
+        /// </summary>
+        /// <param name="pageKey">Page key.</param>
+        /// <param name="creator">Creator.</param>
+	    public void RegisterPage(object pageKey, Func<object,Page> creator)
+        {
+            if (pageKey == null)
+                throw new ArgumentNullException(nameof(pageKey));
+            if (creator == null)
+                throw new ArgumentNullException(nameof(creator));
+
+            if (registeredStatePages == null)
+                registeredStatePages = new Dictionary<object, Func<object, Page>>();
+
+            registeredStatePages.Add(pageKey, creator);
+        }
 
         /// <summary>
         /// Registers an action in response to a navigation request.
@@ -160,6 +183,7 @@ namespace XamarinUniversity.Services
                 throw new ArgumentNullException(nameof (key));
 
             registeredPages?.Remove(key);
+            registeredStatePages?.Remove(key);
 	        registeredActions?.Remove(key);
 	    }
 
@@ -168,16 +192,25 @@ namespace XamarinUniversity.Services
         /// </summary>
         /// <returns>The page by key.</returns>
         /// <param name="pageKey">Page key.</param>
-        Page GetPageByKey(object pageKey)
+        /// <param name="state">Optional state passed to function</param>
+        /// <param name="assignViewModel">True/False whether state was used by page</param>
+        Page GetPageByKey(object pageKey, object state, out bool assignViewModel)
         {
             if (pageKey == null)
                 throw new ArgumentNullException (nameof (pageKey));
 
-            if (registeredPages == null)
-                return null;
+            // Try the state pages first.
+            Func<object, Page> stateCreator = null;
+            if (registeredStatePages?.TryGetValue(pageKey, out stateCreator) == true
+                && stateCreator != null)
+            {
+                assignViewModel = false;
+                return stateCreator.Invoke(state);
+            }
 
-            Func<Page> creator;
-            return registeredPages.TryGetValue(pageKey, out creator) ? creator.Invoke() : null;
+            assignViewModel = true;
+            Func<Page> creator = null;
+            return registeredPages?.TryGetValue(pageKey, out creator) == true && creator != null ? creator.Invoke() : null;
         }
 
         /// <summary>
@@ -264,8 +297,8 @@ namespace XamarinUniversity.Services
         /// </summary>
         /// <returns>Task representing the navigation</returns>
         /// <param name="pageKey">Page key.</param>
-        /// <param name="viewModel">View model.</param>
-        public Task NavigateAsync(object pageKey, object viewModel = null)
+        /// <param name="state">Optional state or View model.</param>
+        public Task NavigateAsync(object pageKey, object state = null)
         {
             if (pageKey == null)
                 throw new ArgumentNullException (nameof (pageKey));
@@ -282,21 +315,22 @@ namespace XamarinUniversity.Services
             }
 
             // Look for a registered page first. If that's not available, look for an action.
-            var page = GetPageByKey(pageKey);
+            bool assignViewModel;
+            var page = GetPageByKey(pageKey, state, out assignViewModel);
             if (page == null) {
                 if (registeredActions != null)
                 {
                     Action<object> work;
                     if (registeredActions.TryGetValue(pageKey, out work))
                     {
-                        work.Invoke(viewModel);
+                        work.Invoke(state);
                     }
                 }
                 return TaskCompleted;
             }
 
-            if (viewModel != null)
-                page.BindingContext = viewModel;
+            if (state != null && assignViewModel)
+                page.BindingContext = state;
 
             return Navigation.PushAsync(page);
         }
@@ -327,11 +361,12 @@ namespace XamarinUniversity.Services
             if (pageKey == null)
                 throw new ArgumentNullException (nameof (pageKey));
 
-            var page = GetPageByKey(pageKey);
+            bool assignViewModel;
+            var page = GetPageByKey(pageKey, viewModel, out assignViewModel);
             if (page == null)
                 throw new ArgumentException("Cannot navigate to unregistered page", "pageKey");
 
-            if (viewModel != null)
+            if (viewModel != null && assignViewModel)
                 page.BindingContext = viewModel;
 
             return Navigation.PushModalAsync(page);
