@@ -75,7 +75,7 @@ namespace XamarinUniversity.Controls
         /// </summary>
         public static readonly BindableProperty SpacingProperty = BindableProperty.Create(
             nameof(Spacing), typeof(double), typeof(ItemsControl),
-            defaultValue: 10,
+            defaultValue: 10.0,
             propertyChanged: OnSpacingPropertyChanged);
 
         /// <summary>

@@ -1,3 +1,7 @@
+## [1.5.0]
+Replaced PCL support with .NET Standard 1.0 and 2.0
+Added Orientation and Spacing properties to ItemsControl
+
 ## [1.1.0]
 Added support for PCL and .NET Standard
 Added ability to reset navigation  stack
