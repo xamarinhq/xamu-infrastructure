@@ -41,23 +41,24 @@ namespace XamarinUniversity.Controls
         /// <summary>
         /// Bindable property for the placeholder text.
         /// </summary>
-        public static readonly BindableProperty PlaceholderTextProperty = BindableProperty.Create (
-            nameof(PlaceholderText), typeof (string), typeof (ItemsControl));
+        public static readonly BindableProperty PlaceholderTextProperty = BindableProperty.Create(
+            nameof(PlaceholderText), typeof(string), typeof(ItemsControl));
 
         /// <summary>
         /// Gets or sets the placeholder text.
         /// </summary>
         /// <value>The placeholder text.</value>
-        public string PlaceholderText {
-            get { return (string)GetValue (PlaceholderTextProperty); }
-            set { SetValue (PlaceholderTextProperty, value); }
+        public string PlaceholderText
+        {
+            get { return (string)GetValue(PlaceholderTextProperty); }
+            set { SetValue(PlaceholderTextProperty, value); }
         }
 
         /// <summary>
         /// Bindable property for the orientation of the layout panel
         /// </summary>
         public static readonly BindableProperty OrientationProperty = BindableProperty.Create(
-            nameof(Orientation), typeof(StackOrientation), typeof(ItemsControl), 
+            nameof(Orientation), typeof(StackOrientation), typeof(ItemsControl),
             defaultValue: StackOrientation.Vertical,
             propertyChanged: OnOrientationPropertyChanged);
 
@@ -65,7 +66,8 @@ namespace XamarinUniversity.Controls
         /// Gets or Sets the Orientation for the layout panel
         /// </summary>
         /// <value>Orientation value</value>
-        public StackOrientation Orientation {
+        public StackOrientation Orientation
+        {
             get { return (StackOrientation)GetValue(OrientationProperty); }
             set { SetValue(OrientationProperty, value); }
         }
@@ -84,7 +86,7 @@ namespace XamarinUniversity.Controls
         /// <value>Spacing value</value>
         public double Spacing
         {
-            get { return (double) GetValue(SpacingProperty); }
+            get { return (double)GetValue(SpacingProperty); }
             set { SetValue(SpacingProperty, value); }
         }
 
@@ -92,46 +94,49 @@ namespace XamarinUniversity.Controls
         /// Bindable property for the Label style used for each item when there
         /// is no data template assigned.
         /// </summary>
-        public static readonly BindableProperty ItemStyleProperty = BindableProperty.Create (
-            nameof(ItemStyle), typeof (Style), typeof (ItemsControl), propertyChanged: OnItemStylePropertyChanged);
+        public static readonly BindableProperty ItemStyleProperty = BindableProperty.Create(
+            nameof(ItemStyle), typeof(Style), typeof(ItemsControl), propertyChanged: OnItemStylePropertyChanged);
 
         /// <summary>
         /// Gets or sets the item style used for dynamically generated labels.
         /// </summary>
         /// <value>The item style.</value>
-        public Style ItemStyle {
-            get { return (Style)GetValue (ItemStyleProperty); }
-            set { SetValue (ItemStyleProperty, value); }
+        public Style ItemStyle
+        {
+            get { return (Style)GetValue(ItemStyleProperty); }
+            set { SetValue(ItemStyleProperty, value); }
         }
 
         /// <summary>
         /// Bindable property for the data source
         /// </summary>
-        public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create (
-            nameof(ItemsSource), typeof (IList), typeof (ItemsControl), propertyChanging: OnItemsSourceChanged);
+        public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
+            nameof(ItemsSource), typeof(IList), typeof(ItemsControl), propertyChanging: OnItemsSourceChanged);
 
         /// <summary>
         /// Gets or sets the items source - can be any collection of elements.
         /// </summary>
         /// <value>The items source.</value>
-        public IList ItemsSource {
-            get { return (IList)GetValue (ItemsSourceProperty); }
-            set { SetValue (ItemsSourceProperty, value); }
+        public IList ItemsSource
+        {
+            get { return (IList)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
         /// <summary>
         /// Bindable property for the data template to visually represent each item.
         /// </summary>
-        public static readonly BindableProperty ItemsTemplateProperty = BindableProperty.Create (
-            nameof(ItemsTemplate), typeof (DataTemplate), typeof (ItemsControl));
+        public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(
+            nameof(ItemTemplate), typeof(DataTemplate), typeof(ItemsControl), propertyChanging: OnItemTemplateChanged);
 
         /// <summary>
         /// Gets or sets the item template used to generate the visuals for a single item.
         /// </summary>
         /// <value>The item template.</value>
-        public DataTemplate ItemsTemplate {
-            get { return (DataTemplate)GetValue (ItemsTemplateProperty); }
-            set { SetValue (ItemsTemplateProperty, value); }
+        public DataTemplate ItemTemplate
+        {
+            get { return (DataTemplate)GetValue(ItemTemplateProperty); }
+            set { SetValue(ItemTemplateProperty, value); }
         }
 
         // Data
@@ -141,23 +146,25 @@ namespace XamarinUniversity.Controls
         /// <summary>
         /// Initializes an ItemsControl.
         /// </summary>
-        public ItemsControl ()
+        public ItemsControl()
         {
-            Padding = new Thickness(5,0,5,5);
+            Padding = new Thickness(5, 0, 5, 5);
 
-            stack = new StackLayout {
+            stack = new StackLayout
+            {
                 Spacing = this.Spacing,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 Orientation = this.Orientation
             };
 
-            noItemsLabel = new Label {
+            noItemsLabel = new Label
+            {
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalTextAlignment = TextAlignment.Center
             };
-            noItemsLabel.SetBinding (Label.StyleProperty, new Binding(nameof(ItemStyle), source: this));
-            noItemsLabel.SetBinding (Label.TextProperty, new Binding (nameof (PlaceholderText), source: this));
+            noItemsLabel.SetBinding(Label.StyleProperty, new Binding(nameof(ItemStyle), source: this));
+            noItemsLabel.SetBinding(Label.TextProperty, new Binding(nameof(PlaceholderText), source: this));
 
             Content = noItemsLabel;
         }
@@ -210,6 +217,36 @@ namespace XamarinUniversity.Controls
             }
         }
 
+        /// <summary>
+        /// This is called when the ItemTemplate property is changed
+        /// </summary>
+        /// <param name="bindable">ItemsSource</param>
+        /// <param name="oldValue">Old value.</param>
+        /// <param name="newValue">New value.</param>
+        static void OnItemTemplateChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((ItemsControl)bindable).OnItemTemplateChangedImpl((DataTemplate)oldValue, (DataTemplate)newValue);
+        }
+
+        /// <summary>
+        /// Instance method used to change the ItemTemplate for each rendered item.
+        /// </summary>
+        /// <param name="oldValue">Old value.</param>
+        /// <param name="newValue">New value.</param>
+        private void OnItemTemplateChangedImpl(DataTemplate oldValue, DataTemplate newValue)
+        {
+            if (oldValue == newValue)
+                return;
+
+            var data = this.ItemsSource;
+            if (data != null)
+            {
+                // Remove all the generated visuals
+                stack.Children.Clear();
+                // Regenerate
+                FillContainer(data, newValue);
+            }
+        }
 
         /// <summary>
         /// This is called when the underlying data source is changed.
@@ -217,9 +254,9 @@ namespace XamarinUniversity.Controls
         /// <param name="bindable">ItemsSource</param>
         /// <param name="oldValue">Old value.</param>
         /// <param name="newValue">New value.</param>
-        static void OnItemsSourceChanged (BindableObject bindable, object oldValue, object newValue)
+        static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((ItemsControl)bindable).OnItemsSourceChangedImpl ((IList)oldValue, (IList)newValue);
+            ((ItemsControl)bindable).OnItemsSourceChangedImpl((IList)oldValue, (IList)newValue);
         }
 
         /// <summary>
@@ -232,19 +269,22 @@ namespace XamarinUniversity.Controls
         void OnItemsSourceChangedImpl(IList oldValue, IList newValue)
         {
             // Unsubscribe from the old collection
-            if (oldValue != null) {
+            if (oldValue != null)
+            {
                 INotifyCollectionChanged ncc = oldValue as INotifyCollectionChanged;
                 if (ncc != null)
                     ncc.CollectionChanged -= OnCollectionChanged;
             }
 
-            if (newValue == null) {
-                stack.Children.Clear ();
+            if (newValue == null)
+            {
+                stack.Children.Clear();
                 Content = noItemsLabel;
             }
-            else {
+            else
+            {
                 Content = stack;
-                FillContainer (newValue);
+                FillContainer(newValue, ItemTemplate);
                 INotifyCollectionChanged ncc = newValue as INotifyCollectionChanged;
                 if (ncc != null)
                     ncc.CollectionChanged += OnCollectionChanged;
@@ -257,9 +297,9 @@ namespace XamarinUniversity.Controls
         /// <param name="bindable">ItemsControl</param>
         /// <param name="oldValue">Old value.</param>
         /// <param name="newValue">New value.</param>
-        static void OnItemStylePropertyChanged (BindableObject bindable, object oldValue, object newValue)
+        static void OnItemStylePropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
-            ((ItemsControl)bindable).OnItemStylePropertyChangedImpl (newValue as Style);
+            ((ItemsControl)bindable).OnItemStylePropertyChangedImpl(newValue as Style);
         }
 
         /// <summary>
@@ -267,19 +307,20 @@ namespace XamarinUniversity.Controls
         /// <see cref="ItemStyle"/> property. This applies the new style to all the labels.
         /// </summary>
         /// <param name="style">Style.</param>
-        void OnItemStylePropertyChangedImpl (Style style)
+        void OnItemStylePropertyChangedImpl(Style style)
         {
             // Ignore if we have a data template.
-            if (ItemsTemplate != null)
+            if (ItemTemplate != null)
                 return;
 
             foreach (View view in stack.Children)
             {
                 Label label = view as Label;
-                if (label != null) {
+                if (label != null)
+                {
 
                     if (style == null)
-                        label.ClearValue (Label.StyleProperty);
+                        label.ClearValue(Label.StyleProperty);
                     else
                         label.Style = style;
                 }
@@ -292,53 +333,61 @@ namespace XamarinUniversity.Controls
         /// previously and simply changes the binding context.
         /// </summary>
         /// <param name="newValue">New items to display</param>
-        void FillContainer (IList newValue)
+        /// <param name="itemTemplate">ItemTemplate to use (null for Label)</param>
+        void FillContainer(IList newValue, DataTemplate itemTemplate)
         {
             var itemStyle = ItemStyle;
-            var template = ItemsTemplate;
             var visuals = stack.Children;
-            
+
             for (int i = 0; i < this.stack.Children.Count; i++)
             {
                 this.stack.Children[i].IsVisible = i < newValue.Count;
             }
 
-            for (int i = 0; i < newValue.Count; i++) {
-                var dataItem = newValue [i];
+            for (int i = 0; i < newValue.Count; i++)
+            {
+                var dataItem = newValue[i];
 
                 if (visuals.Count > i)
                 {
-                    if (template != null)
+                    if (itemTemplate != null)
                     {
-                        var visualItem = visuals [i];
+                        var visualItem = visuals[i];
                         visualItem.BindingContext = dataItem;
-                    }    
+                    }
                     else
                     {
-                        Label visualItem = (Label) visuals [i];
-                        visualItem.Text = dataItem.ToString ();
-                        if (itemStyle != null) {
+                        Label visualItem = (Label)visuals[i];
+                        visualItem.Text = dataItem.ToString();
+                        if (itemStyle != null)
+                        {
                             visualItem.Style = itemStyle;
-                        } else {
-                            visualItem.ClearValue (Label.StyleProperty);
+                        }
+                        else
+                        {
+                            visualItem.ClearValue(Label.StyleProperty);
                         }
                     }
                 }
                 else
                 {
-                    if (template != null) {
-                        InflateTemplate (template, dataItem);
-                    } else {
-                        var label = new Label { Text = dataItem.ToString () };
-                        if (itemStyle != null) {
+                    if (itemTemplate != null)
+                    {
+                        InflateTemplate(itemTemplate, dataItem);
+                    }
+                    else
+                    {
+                        var label = new Label { Text = dataItem.ToString() };
+                        if (itemStyle != null)
+                        {
                             label.Style = itemStyle;
                         }
-                        stack.Children.Add (label);
+                        stack.Children.Add(label);
                     }
                 }
             }
 
-            Content = (stack.Children.Count == 0) ? (View) noItemsLabel : stack;
+            Content = (stack.Children.Count == 0) ? (View)noItemsLabel : stack;
         }
 
         /// <summary>
@@ -347,17 +396,18 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="template">Template.</param>
         /// <param name="item">Item.</param>
-        void InflateTemplate (DataTemplate template, object item)
+        void InflateTemplate(DataTemplate template, object item)
         {
             // Pull real template from selector if necessary.
             var dSelector = template as DataTemplateSelector;
             if (dSelector != null)
-                template = dSelector.SelectTemplate (item, this);
+                template = dSelector.SelectTemplate(item, this);
 
-            var view = template.CreateContent () as View;
-            if (view != null) {
+            var view = template.CreateContent() as View;
+            if (view != null)
+            {
                 view.BindingContext = item;
-                stack.Children.Add (view);
+                stack.Children.Add(view);
             }
         }
 
@@ -368,10 +418,10 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="sender">Sender.</param>
         /// <param name="e">E.</param>
-        void OnCollectionChanged (object sender, NotifyCollectionChangedEventArgs e)
+        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            FillContainer ((IList)sender);
+            FillContainer((IList)sender, ItemTemplate);
         }
-   }
+    }
 }
 

@@ -1,6 +1,7 @@
 ## [1.5.0]
 Replaced PCL support with .NET Standard 1.0 and 2.0
 Added Orientation and Spacing properties to ItemsControl
+Fixed bug in ItemsControl when DataTemplate is applied _after_ the ItemsSource
 
 ## [1.1.0]
 Added support for PCL and .NET Standard
