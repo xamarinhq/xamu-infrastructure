@@ -27,6 +27,7 @@
 using System.Collections;
 using Xamarin.Forms;
 using System.Collections.Specialized;
+using System;
 
 namespace XamarinUniversity.Controls
 {
@@ -41,7 +42,7 @@ namespace XamarinUniversity.Controls
         /// Bindable property for the placeholder text.
         /// </summary>
         public static readonly BindableProperty PlaceholderTextProperty = BindableProperty.Create (
-            "PlaceholderText", typeof (string), typeof (ItemsControl));
+            nameof(PlaceholderText), typeof (string), typeof (ItemsControl));
 
         /// <summary>
         /// Gets or sets the placeholder text.
@@ -53,11 +54,46 @@ namespace XamarinUniversity.Controls
         }
 
         /// <summary>
+        /// Bindable property for the orientation of the layout panel
+        /// </summary>
+        public static readonly BindableProperty OrientationProperty = BindableProperty.Create(
+            nameof(Orientation), typeof(StackOrientation), typeof(ItemsControl), 
+            defaultValue: StackOrientation.Vertical,
+            propertyChanged: OnOrientationPropertyChanged);
+
+        /// <summary>
+        /// Gets or Sets the Orientation for the layout panel
+        /// </summary>
+        /// <value>Orientation value</value>
+        public StackOrientation Orientation {
+            get { return (StackOrientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
+
+        /// <summary>
+        /// Bindable property for the Spacing of the layout panel
+        /// </summary>
+        public static readonly BindableProperty SpacingProperty = BindableProperty.Create(
+            nameof(Spacing), typeof(double), typeof(ItemsControl),
+            defaultValue: 10,
+            propertyChanged: OnSpacingPropertyChanged);
+
+        /// <summary>
+        /// Gets or Sets the Spacing for the layout panel
+        /// </summary>
+        /// <value>Spacing value</value>
+        public double Spacing
+        {
+            get { return (double) GetValue(SpacingProperty); }
+            set { SetValue(SpacingProperty, value); }
+        }
+
+        /// <summary>
         /// Bindable property for the Label style used for each item when there
         /// is no data template assigned.
         /// </summary>
         public static readonly BindableProperty ItemStyleProperty = BindableProperty.Create (
-            "ItemStyle", typeof (Style), typeof (ItemsControl), propertyChanged: OnItemStylePropertyChanged);
+            nameof(ItemStyle), typeof (Style), typeof (ItemsControl), propertyChanged: OnItemStylePropertyChanged);
 
         /// <summary>
         /// Gets or sets the item style used for dynamically generated labels.
@@ -72,7 +108,7 @@ namespace XamarinUniversity.Controls
         /// Bindable property for the data source
         /// </summary>
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create (
-            "ItemsSource", typeof (IList), typeof (ItemsControl), propertyChanging: OnItemsSourceChanged);
+            nameof(ItemsSource), typeof (IList), typeof (ItemsControl), propertyChanging: OnItemsSourceChanged);
 
         /// <summary>
         /// Gets or sets the items source - can be any collection of elements.
@@ -86,16 +122,16 @@ namespace XamarinUniversity.Controls
         /// <summary>
         /// Bindable property for the data template to visually represent each item.
         /// </summary>
-        public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create (
-            "ItemTemplate", typeof (DataTemplate), typeof (ItemsControl));
+        public static readonly BindableProperty ItemsTemplateProperty = BindableProperty.Create (
+            nameof(ItemsTemplate), typeof (DataTemplate), typeof (ItemsControl));
 
         /// <summary>
         /// Gets or sets the item template used to generate the visuals for a single item.
         /// </summary>
         /// <value>The item template.</value>
-        public DataTemplate ItemTemplate {
-            get { return (DataTemplate)GetValue (ItemTemplateProperty); }
-            set { SetValue (ItemTemplateProperty, value); }
+        public DataTemplate ItemsTemplate {
+            get { return (DataTemplate)GetValue (ItemsTemplateProperty); }
+            set { SetValue (ItemsTemplateProperty, value); }
         }
 
         // Data
@@ -110,9 +146,10 @@ namespace XamarinUniversity.Controls
             Padding = new Thickness(5,0,5,5);
 
             stack = new StackLayout {
-                Spacing = 10,
+                Spacing = this.Spacing,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.FillAndExpand
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                Orientation = this.Orientation
             };
 
             noItemsLabel = new Label {
@@ -124,6 +161,55 @@ namespace XamarinUniversity.Controls
 
             Content = noItemsLabel;
         }
+
+        /// <summary>
+        /// This is called when the Orientation property is changed
+        /// </summary>
+        /// <param name="bindable">ItemsSource</param>
+        /// <param name="oldValue">Old value.</param>
+        /// <param name="newValue">New value.</param>
+        static void OnOrientationPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((ItemsControl)bindable).OnOrientationPropertyChangedImpl((StackOrientation)oldValue, (StackOrientation)newValue);
+        }
+
+        /// <summary>
+        /// Instance method used to change the current orientation of the layout panel.
+        /// </summary>
+        /// <param name="oldValue">Old value.</param>
+        /// <param name="newValue">New value.</param>
+        private void OnOrientationPropertyChangedImpl(StackOrientation oldValue, StackOrientation newValue)
+        {
+            if (oldValue != newValue)
+            {
+                stack.Orientation = newValue;
+            }
+        }
+
+        /// <summary>
+        /// This is called when the Spacing property is changed
+        /// </summary>
+        /// <param name="bindable">ItemsSource</param>
+        /// <param name="oldValue">Old value.</param>
+        /// <param name="newValue">New value.</param>
+        static void OnSpacingPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            ((ItemsControl)bindable).OnSpacingPropertyChangedImpl((double)oldValue, (double)newValue);
+        }
+
+        /// <summary>
+        /// Instance method used to change the current spacing of the layout panel.
+        /// </summary>
+        /// <param name="oldValue">Old value.</param>
+        /// <param name="newValue">New value.</param>
+        private void OnSpacingPropertyChangedImpl(double oldValue, double newValue)
+        {
+            if (oldValue != newValue)
+            {
+                stack.Spacing = newValue;
+            }
+        }
+
 
         /// <summary>
         /// This is called when the underlying data source is changed.
@@ -184,7 +270,7 @@ namespace XamarinUniversity.Controls
         void OnItemStylePropertyChangedImpl (Style style)
         {
             // Ignore if we have a data template.
-            if (ItemTemplate != null)
+            if (ItemsTemplate != null)
                 return;
 
             foreach (View view in stack.Children)
@@ -209,7 +295,7 @@ namespace XamarinUniversity.Controls
         void FillContainer (IList newValue)
         {
             var itemStyle = ItemStyle;
-            var template = ItemTemplate;
+            var template = ItemsTemplate;
             var visuals = stack.Children;
             
             for (int i = 0; i < this.stack.Children.Count; i++)
