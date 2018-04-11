@@ -2,9 +2,9 @@
 // RefreshingCollection.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -38,17 +37,42 @@ namespace XamarinUniversity.Infrastructure
     /// method. You can then "refresh" the data at any time and have the collection
     /// make callbacks when starting and completing the refresh.
     /// </summary>
-    [DebuggerDisplay ("Count={Count}")]
-    public class RefreshingCollection<T> : ObservableCollection<T>
+    /// <typeparam name="T">Object type for the collection</typeparam>
+    [DebuggerDisplay("Count={Count}")]
+    public class RefreshingCollection<T> : OptimizedObservableCollection<T>
     {
         private bool isRefreshing;
-        readonly Func<Task<IEnumerable<T>>> refreshDataFunc;
+        private readonly Func<Task<IEnumerable<T>>> refreshDataFunc;
+
+        /// <summary>
+        /// True when the collection is refreshing.
+        /// Can databind this to a ListView.IsRefreshing property to control
+        /// when it's refreshing.
+        /// </summary>
+        public bool IsRefreshing
+        {
+            get { return isRefreshing; }
+            protected set
+            {
+                if (isRefreshing != value)
+                {
+                    isRefreshing = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(IsRefreshing)));
+                }
+            }
+        }
 
         /// <summary>
         /// This delegate is called BEFORE a refresh is initated
         /// </summary>
         /// <value>The before refresh.</value>
         public Func<RefreshingCollection<T>, object> BeforeRefresh { get; set; }
+
+        /// <summary>
+        /// This delegate is called during a refresh to possibly merge the collection.
+        /// If this is not implemented, then the collection is replaced.
+        /// </summary>
+        public Action<RefreshingCollection<T>, IEnumerable<T>> Merge { get; set; }
 
         /// <summary>
         /// This delegate is called AFTER a refresh completes and the contents are replaced.
@@ -68,20 +92,18 @@ namespace XamarinUniversity.Infrastructure
         /// <param name="refreshFunc">Method which returns the data for the collection</param>
         public RefreshingCollection(Func<Task<IEnumerable<T>>> refreshFunc)
         {
-            if (refreshFunc == null)
-                throw new ArgumentNullException("refreshFunc");
-            this.refreshDataFunc = refreshFunc;
+            this.refreshDataFunc = refreshFunc ?? throw new ArgumentNullException(nameof(refreshFunc));
         }
 
         /// <summary>
-        /// Called when the collection is being changed; we turn this off during
-        /// full refresh events.
+        /// Create a new Refreshing Collection.
         /// </summary>
-        /// <param name="e">E.</param>
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        /// <param name="refreshFunc">Method which returns the data for the collection</param>
+        /// <param name="initialData">Initial data to fill collection with</param>
+        public RefreshingCollection(Func<Task<IEnumerable<T>>> refreshFunc, IEnumerable<T> initialData)
+            : base(initialData)
         {
-            if (!isRefreshing)
-                base.OnCollectionChanged(e);
+            this.refreshDataFunc = refreshFunc ?? throw new ArgumentNullException(nameof(refreshFunc));
         }
 
         /// <summary>
@@ -90,43 +112,50 @@ namespace XamarinUniversity.Infrastructure
         /// back from the refresh method.
         /// </summary>
         /// <returns>Awaitable task</returns>
-        public async Task RefreshAsync(bool appendData = false)
+        public async Task RefreshAsync()
         {
             object refreshParameter = null;
-            Exception caughtException = null;
-            isRefreshing = true;
+            IsRefreshing = true;
 
             try
             {
                 if (BeforeRefresh != null)
+                {
                     refreshParameter = BeforeRefresh.Invoke(this);
+                }
 
                 var results = await refreshDataFunc();
                 if (results != null)
                 {
-                    this.Clear();
-                    foreach (var item in results)
-                        this.Add(item);
+                    using (base.BeginMassUpdate())
+                    {
+                        if (Merge == null) // replace the entire collection
+                        {
+                            base.Clear();
+                            foreach (var item in results)
+                            {
+                                base.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            Merge.Invoke(this, results);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                caughtException = ex;
-            }
-
-            if (caughtException != null)
-            {
                 if (RefreshFailed != null)
-                    await RefreshFailed.Invoke (this, caughtException);  
+                {
+                    await RefreshFailed.Invoke(this, ex);
+                }
             }
-            else if (AfterRefresh != null)
-                AfterRefresh.Invoke (this, refreshParameter);
-            
-            // Done refresh the world.
-            isRefreshing = false;
-            OnCollectionChanged(
-                new NotifyCollectionChangedEventArgs(
-                    NotifyCollectionChangedAction.Reset));
+            finally
+            {
+                IsRefreshing = false;
+                AfterRefresh?.Invoke(this, refreshParameter);
+            }
         }
     }
 }

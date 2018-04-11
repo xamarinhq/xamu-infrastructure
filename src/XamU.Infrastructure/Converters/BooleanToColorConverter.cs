@@ -1,5 +1,5 @@
 ﻿//
-// NullOrEmptyBooleanConverter.cs
+// BooleanToColorConverter.cs
 //
 // Author:
 //       Mark Smith <smmark@microsoft.com>
@@ -25,73 +25,74 @@
 // THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace XamarinUniversity.Converters
 {
     /// <summary>
-    /// This converts an object value to a boolean
+    /// This converter converts a boolean (true/false) value into a specific
+    /// color.
     /// </summary>
-    public class NullOrEmptyBooleanConverter : IMarkupExtension, IValueConverter
+    public class BooleanToColorConverter : IValueConverter, IMarkupExtension
     {
         /// <summary>
-        /// Mapping value for null - defaults to false.
+        /// The color to use for TRUE
         /// </summary>
-        public bool Null { get; set; }
-        /// <summary>
-        /// Mapping value for empty - defaults to false.
-        /// </summary>
-        public bool Empty { get; set; }
-        /// <summary>
-        /// Mapping value for non-null, defaults to true.
-        /// </summary>
-        public bool NotEmpty { get; set; }
+        public Color TrueColor { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// The color to use for FALSE
         /// </summary>
-        public NullOrEmptyBooleanConverter()
+        public Color FalseColor { get; set; }
+
+        /// <summary>
+        /// Constructor - sets the initial colors.
+        /// </summary>
+        public BooleanToColorConverter()
         {
-            Empty = false;
-            Null = false;
-            NotEmpty = true;
+            TrueColor = Color.Black;
+            FalseColor = Color.LightGray;
         }
 
         /// <summary>
-        /// Converts a value. 
+        /// Convert a boolean into a Color value
         /// </summary>
-        /// <returns>
-        /// A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        /// <param name="value">The value produced by the binding source.</param><param name="targetType">The type of the binding target property.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
+        /// <param name="value">Boolean value</param>
+        /// <param name="targetType">Returning color</param>
+        /// <param name="parameter">Parameter (not used)</param>
+        /// <param name="culture">Culture (not used)</param>
+        /// <returns></returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (targetType != typeof(bool))
-                throw new ArgumentException("Bad type conversion for NullOrEmptyBooleanConverter");
+            if (targetType != typeof(Color))
+                throw new Exception($"{nameof(BooleanToColorConverter)} can only be used with a Color target.");
 
-            return value == null ? Null
-                : string.IsNullOrEmpty((value ?? "").ToString()) ? Empty : NotEmpty;
+            return (value as bool? ?? false) ? TrueColor : FalseColor;
         }
 
         /// <summary>
-        /// Converts a value. 
+        /// ConvertBack (not supported)
         /// </summary>
-        /// <returns>
-        /// A converted value. If the method returns null, the valid null value is used.
-        /// </returns>
-        /// <param name="value">The value that is produced by the binding target.</param><param name="targetType">The type to convert to.</param><param name="parameter">The converter parameter to use.</param><param name="culture">The culture to use in the converter.</param>
+        /// <param name="value">Color</param>
+        /// <param name="targetType">Boolean</param>
+        /// <param name="parameter">Optional parameter (not used)</param>
+        /// <param name="culture">Culture (not used)</param>
+        /// <returns></returns>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            Color color = (Color)value;
+            return (color == TrueColor) ? true : false;
         }
 
         /// <summary>
-        /// Returns the converter
+        /// Returns an instance of the ValueConverter as an inline element.
         /// </summary>
-        /// <param name="serviceProvider"></param>
-        /// <returns></returns>
+        /// <param name="serviceProvider">Service Provider for XAML services</param>
+        /// <returns>Value Converter</returns>
         public object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;

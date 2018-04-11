@@ -2,7 +2,7 @@
 // ColorExtensions.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
 // Copyright (c) 2017 Xamarin, Microsoft.
 //

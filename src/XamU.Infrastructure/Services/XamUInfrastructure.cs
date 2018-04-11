@@ -1,6 +1,6 @@
-﻿using XamarinUniversity.Interfaces;
-using System;
+﻿using System;
 using System.Diagnostics;
+using XamarinUniversity.Infrastructure;
 
 namespace XamarinUniversity.Services
 {
@@ -32,9 +32,7 @@ namespace XamarinUniversity.Services
         /// used by the library (and app).
         /// </summary>
         /// <value>The service locator.</value>
-        public static IDependencyService ServiceLocator => serviceLocator != null
-                    ? serviceLocator
-                    : (serviceLocator = new DependencyServiceWrapper ());
+        public static IDependencyService ServiceLocator => serviceLocator ?? (serviceLocator = new DependencyServiceWrapper ());
 
         /// <summary>
         /// Registers the known services with the ServiceLocator type.
@@ -78,23 +76,31 @@ namespace XamarinUniversity.Services
             // Init was called. This is not allowed if they are going to change the locator.
             if (defaultLocator != null 
                 && serviceLocator != null)
-                throw new InvalidOperationException (
-                    "Must call XamUInfrastructure.Init before using any library features; " +
-                    "ServiceLocator has already been set.");
+            {
+                throw new InvalidOperationException(
+                   $"Must call {nameof(XamUInfrastructure.Init)} before using any library features; " +
+                   "ServiceLocator has already been set.");
+            }
 
             // Assign the locator; either use the supplied one, or the default
             // DependencyService version if not supplied.
             if (defaultLocator == null)
+            {
                 defaultLocator = ServiceLocator;
-            else {
+            }
+            else
+            {
                 Debug.Assert (serviceLocator == null);
                 serviceLocator = defaultLocator;
             }
 
             // Register the services
-            if (registerBehavior.HasFlag(RegisterBehavior.MessageVisualizer))
+            if ((registerBehavior & RegisterBehavior.MessageVisualizer) != 0)
+            {
                 defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService>();
-            if (registerBehavior.HasFlag(RegisterBehavior.Navigation))
+            }
+
+            if ((registerBehavior & RegisterBehavior.Navigation) != 0)
             {
                 // Use a single instance for the navigation service and
                 // register both interfaces against it.

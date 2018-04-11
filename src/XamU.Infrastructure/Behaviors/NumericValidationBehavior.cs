@@ -2,9 +2,9 @@
 // NumericValidationBehavior.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,8 @@ namespace XamarinUniversity.Infrastructure
         /// Backing storage for the boolean flag which decides between
         /// integer vs. double validation.
         /// </summary>
-        public static BindableProperty AllowDecimalProperty =
-            BindableProperty.Create ("AllowDecimal",
+        public static BindableProperty AllowDecimalProperty = BindableProperty.Create (
+                nameof(AllowDecimal),
                 typeof (bool), typeof (NumericValidationBehavior),
                 true, BindingMode.OneWay);
 
@@ -61,8 +61,8 @@ namespace XamarinUniversity.Infrastructure
         /// Backing storage for the color used when the
         /// Entry has invalid data (non-numeric).
         /// </summary>
-        public static BindableProperty InvalidColorProperty =
-            BindableProperty.Create ("InvalidColor",
+        public static BindableProperty InvalidColorProperty = BindableProperty.Create (
+                nameof(InvalidColor),
                 typeof (Color), typeof (NumericValidationBehavior),
                 Color.Red, BindingMode.OneWay);
 
@@ -72,7 +72,7 @@ namespace XamarinUniversity.Infrastructure
         /// </summary>
         /// <value>The selected item.</value>
         public Color InvalidColor {
-            get { return (Color) base.GetValue (InvalidColorProperty); }
+            get { return (Color)GetValue(InvalidColorProperty); }
             set { base.SetValue (InvalidColorProperty, value); }
         }
         #endregion
@@ -109,13 +109,11 @@ namespace XamarinUniversity.Infrastructure
             bool isValid = false;
             if (AllowDecimal)
             {
-                double result;
-                isValid = double.TryParse (args.NewTextValue, out result);
+                isValid = double.TryParse(args.NewTextValue, out double result);
             }
             else
             {
-                long result;
-                isValid = long.TryParse (args.NewTextValue, out result);
+                isValid = long.TryParse(args.NewTextValue, out long result);
             }
 
             ((Entry)sender).TextColor = isValid ? Color.Default : InvalidColor;

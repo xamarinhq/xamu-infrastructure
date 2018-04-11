@@ -2,9 +2,9 @@
 // EventToCommandBehavior.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -58,7 +58,7 @@ namespace XamarinUniversity.Infrastructure
         /// Bindable property for the event name to hook into.
         /// </summary>
         public static readonly BindableProperty EventNameProperty = BindableProperty.Create (
-            "EventName", typeof (string), typeof (EventToCommandBehavior),
+            nameof(EventName), typeof (string), typeof (EventToCommandBehavior),
             propertyChanged: OnEventNameChanged);
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace XamarinUniversity.Infrastructure
         /// Bindable property for the ICommand to forward the event to.
         /// </summary>
         public static readonly BindableProperty CommandProperty = BindableProperty.Create (
-            "Command", typeof (ICommand), typeof (EventToCommandBehavior));
+            nameof(Command), typeof (ICommand), typeof (EventToCommandBehavior));
 
         /// <summary>
         /// The ICommand implementation to call when the event is raised.
@@ -91,7 +91,7 @@ namespace XamarinUniversity.Infrastructure
         /// Bindable property for an optional parameter to send to the Command.
         /// </summary>
         public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create (
-            "CommandParameter", typeof (object), typeof (EventToCommandBehavior));
+            nameof(CommandParameter), typeof (object), typeof (EventToCommandBehavior));
 
         /// <summary>
         /// Provides an optional piece of data for the command.
@@ -108,7 +108,7 @@ namespace XamarinUniversity.Infrastructure
         /// Bindable property for an optional Sender+EventArgs > CommandParameter converter.
         /// </summary>
         public static readonly BindableProperty EventArgsConverterProperty = BindableProperty.Create (
-            "EventArgsConverter", typeof (IValueConverter), typeof (EventToCommandBehavior));
+            nameof(EventArgsConverter), typeof (IValueConverter), typeof (EventToCommandBehavior));
 
         /// <summary>
         /// Converter which is passed the sender/EventArgs for the event; 
@@ -187,11 +187,13 @@ namespace XamarinUniversity.Infrastructure
         {
             if (Command != null) {
                 object parameter;
-                if (EventArgsConverter != null) {
+                if (EventArgsConverter != null)
+                {
                     parameter = EventArgsConverter.Convert (sender, typeof (object), 
                                     e, CultureInfo.CurrentUICulture);
                 }
-                else {
+                else
+                {
                     parameter = CommandParameter;
                 }
 

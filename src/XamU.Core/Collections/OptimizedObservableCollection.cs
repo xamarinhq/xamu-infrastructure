@@ -2,9 +2,9 @@
 // OptimizedObservableCollection.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ namespace XamarinUniversity.Infrastructure
     /// turning off notifications for mass updates through 
     /// the <see cref="BeginMassUpdate"/> method.
     /// </summary>
+    /// <typeparam name="T">Class type to hold</typeparam>
     /// <example>
     /// <code>
     /// var coll = new OptimizedObservableCollection&lt;string&gt;();

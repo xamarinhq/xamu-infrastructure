@@ -1,3 +1,8 @@
+## [1.6.0]
+**Breaking Change** Refined namespaces - might need to change some `using` statements.
+Simplified and cleaned up some code 
+Added a few new converters
+
 ## [1.5.0]
 Replaced PCL support with .NET Standard 1.0 and 2.0
 Added Orientation and Spacing properties to ItemsControl

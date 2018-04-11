@@ -1,11 +1,11 @@
-#define DEBUG
+#define DEBUG // so we can use Debug.WriteLine
 //
 // DependencyServiceWrapper.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,13 +25,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using XamarinUniversity.Interfaces;
 using Xamarin.Forms;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System.Diagnostics;
+using XamarinUniversity.Infrastructure;
 
 namespace XamarinUniversity.Services
 {
@@ -81,7 +81,7 @@ namespace XamarinUniversity.Services
                 if (ctors.Length == 0)
                     return null;
 
-                var ctor = ctors.FirstOrDefault(c => c.GetParameters().Length == 0);
+                var ctor = Array.Find(ctors, c => c.GetParameters().Length == 0);
                 if (ctor != null)
                     return Activator.CreateInstance(targetType) as T;
 

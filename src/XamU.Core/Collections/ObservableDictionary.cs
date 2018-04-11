@@ -2,9 +2,9 @@
 // ObservableDictionary.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -73,12 +73,10 @@ namespace XamarinUniversity.Infrastructure
         /// <summary>
         /// Constructor that allows different storage initialization
         /// </summary>
+        /// <param name="store">Existing Dictionary storage</param>
         public ObservableDictionary(IDictionary<TKey,TValue> store)
         {
-            if (store == null)
-                throw new ArgumentNullException("store");
-
-            underlyingDictionary = store;
+            underlyingDictionary = store ?? throw new ArgumentNullException(nameof(store));
         }
 
         /// <summary>
@@ -210,7 +208,10 @@ namespace XamarinUniversity.Infrastructure
         {
             bool flag = underlyingDictionary.Remove(item);
             if (flag)
+            {
                 OnNotifyRemove(item);
+            }
+
             return flag;
         }
 
@@ -377,10 +378,10 @@ namespace XamarinUniversity.Infrastructure
         /// <param name="e">Arguments of the event being raised.</param>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (shouldRaiseNotifications == false)
-                return;
-
-            CollectionChanged?.Invoke (this, e);
+            if (shouldRaiseNotifications)
+            {
+                CollectionChanged?.Invoke(this, e);
+            }
         }
 
         /// <summary>
@@ -389,10 +390,10 @@ namespace XamarinUniversity.Infrastructure
         /// <param name="e">Property event args.</param>
         protected virtual void OnPropertyChanged (PropertyChangedEventArgs e)
         {
-            if (shouldRaiseNotifications == false)
-                return;
-
-            PropertyChanged?.Invoke (this, e);
+            if (shouldRaiseNotifications)
+            {
+                PropertyChanged?.Invoke(this, e);
+            }
         }
 
         /// <summary>

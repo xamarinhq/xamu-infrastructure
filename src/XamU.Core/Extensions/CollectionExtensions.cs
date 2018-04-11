@@ -2,9 +2,9 @@
 // CollectionExtensions.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
-using XamarinUniversity.Collections;
 
 namespace XamarinUniversity.Infrastructure
 {
@@ -47,7 +46,8 @@ namespace XamarinUniversity.Infrastructure
         public static IEnumerable<GroupedObservableCollection<TKey, TValue>> ToGroupedObservable<TKey, TValue> (
            this IEnumerable<IGrouping<TKey, TValue>> group)
         {
-            foreach (var item in group) {
+            foreach (var item in group)
+            {
                 yield return new GroupedObservableCollection<TKey, TValue> (item.Key, item);
             }
         }
@@ -67,6 +67,7 @@ namespace XamarinUniversity.Infrastructure
         /// Perform a sort of the items in a collection. This is useful
         /// if the underlying collection does not support sorting. 
         /// </summary>
+        /// <typeparam name="T">Item type in collection</typeparam>
         /// <param name="collection">Underlying collection to sort</param>
         /// <param name="comparer">Comparer delegate</param>
         /// <param name="reverse">True to reverse the collection</param>
@@ -149,34 +150,39 @@ namespace XamarinUniversity.Infrastructure
         /// <summary>
         /// Add a range of IEnumerable collection to an existing Collection.
         /// </summary>
-        ///<typeparam name="T">Type of collection</typeparam>
-        ///<param name="collection">Collection</param>
+        /// <typeparam name="T">Type of collection</typeparam>
+        /// <param name="collection">Collection</param>
         /// <param name="items">Items to add</param>
         public static void AddRange<T> (this ICollection<T> collection, IEnumerable<T> items)
         {
             if (collection == null)
-                throw new ArgumentNullException ("collection");
+                throw new ArgumentNullException (nameof(collection));
             if (items == null)
-                throw new ArgumentNullException ("items");
+                throw new ArgumentNullException (nameof(items));
 
             foreach (var item in items)
-                collection.Add (item);
+            {
+                collection.Add(item);
+            }
         }
 
         /// <summary>
         /// Removes a set of items from the collection.
         /// </summary>
+        /// <typeparam name="T">Type of collection</typeparam>
         /// <param name="collection">Collection to remove from</param>
         /// <param name="items">Items to remove from collection.</param>
         public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> items)
         {
             if (collection == null)
-                throw new ArgumentNullException ("collection");
+                throw new ArgumentNullException (nameof(collection));
             if (items == null)
-                throw new ArgumentNullException ("items");
+                throw new ArgumentNullException (nameof(items));
 
             foreach (var item in items)
-                collection.Remove (item);
+            {
+                collection.Remove(item);
+            }
         }
 
         ///<summary>
@@ -190,7 +196,8 @@ namespace XamarinUniversity.Infrastructure
         public static int IndexOf<T> (this IEnumerable<T> collection, Predicate<T> test)
         {
             int pos = 0;
-            foreach (var item in collection) {
+            foreach (var item in collection)
+            {
                 if (test (item))
                     return pos;
                 pos++;
@@ -209,9 +216,9 @@ namespace XamarinUniversity.Infrastructure
         {
             // Simple parameter checking
             if (sourceIndex < 0 || sourceIndex >= collection.Count)
-                throw new ArgumentOutOfRangeException ("sourceIndex");
+                throw new ArgumentOutOfRangeException (nameof(sourceIndex));
             if (destIndex < 0 || destIndex >= collection.Count)
-                throw new ArgumentOutOfRangeException ("destIndex");
+                throw new ArgumentOutOfRangeException (nameof(destIndex));
 
             // Ignore if same index
             if (sourceIndex == destIndex)
@@ -234,13 +241,11 @@ namespace XamarinUniversity.Infrastructure
         {
             // Simple parameter checking
             if (startingIndex < 0 || startingIndex >= collection.Count)
-                throw new ArgumentOutOfRangeException ("startingIndex");
+                throw new ArgumentOutOfRangeException (nameof(startingIndex));
             if (destIndex < 0 || destIndex >= collection.Count)
-                throw new ArgumentOutOfRangeException ("destIndex");
-            if (startingIndex + count > collection.Count)
-                throw new ArgumentOutOfRangeException ("count");
-            if (count < 0)
-                throw new ArgumentOutOfRangeException ("count");
+                throw new ArgumentOutOfRangeException (nameof(destIndex));
+            if (count < 0 || startingIndex + count > collection.Count)
+                throw new ArgumentOutOfRangeException (nameof(count));
 
             // Ignore if same index or count is zero
             if (startingIndex == destIndex || count == 0)

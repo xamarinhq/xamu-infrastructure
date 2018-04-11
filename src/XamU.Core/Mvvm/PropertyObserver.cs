@@ -2,9 +2,9 @@
 // PropertyObserver.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace XamarinUniversity
+namespace XamarinUniversity.Infrastructure
 {
     /// <summary>
     /// Monitors the PropertyChanged event of an object that implements INotifyPropertyChanged,
@@ -56,10 +56,7 @@ namespace XamarinUniversity
         /// <param name="propertySource">The object to monitor for property changes.</param>
         public PropertyObserver (T propertySource)
         {
-            if (propertySource == null)
-                throw new ArgumentNullException ("propertySource");
-
-            source = propertySource;
+            source = propertySource ?? throw new ArgumentNullException (nameof(propertySource));
             source.PropertyChanged += OnSourcePropertyChanged;
             pcToHandlerMap = new Dictionary<string, Action<T>> ();
         }
@@ -78,7 +75,7 @@ namespace XamarinUniversity
         /// </summary>
         /// <param name="sender">Sender</param>
         /// <param name="e">PropertyChangedEventArgs</param>
-        void OnSourcePropertyChanged (object sender, PropertyChangedEventArgs e)
+        private void OnSourcePropertyChanged (object sender, PropertyChangedEventArgs e)
         {
             string propertyName = e.PropertyName;
             var propertySource = (T)sender;
@@ -86,19 +83,20 @@ namespace XamarinUniversity
             Debug.Assert (propertySource == source);
 
             // If there's no property, then notify ALL handlers.
-            if (string.IsNullOrEmpty (propertyName)) {
+            if (string.IsNullOrEmpty (propertyName))
+            {
                 // Get a safe copy of the list
                 List<Action<T>> entries = pcToHandlerMap.Values.ToList ();
                 foreach (var entry in entries)
-                    entry.Invoke (propertySource);
+                {
+                    entry.Invoke(propertySource);
+                }
             }
             else
             {
-                Action<T> action = null;
-                if (pcToHandlerMap.TryGetValue (propertyName, out action))
+                if (pcToHandlerMap.TryGetValue(propertyName, out Action<T> action))
                 {
-                    if (action != null)
-                        action (propertySource);
+                    action?.Invoke(propertySource);
                 }
             }
         }
@@ -112,16 +110,16 @@ namespace XamarinUniversity
         public PropertyObserver<T> RegisterHandler (Expression<Func<T, object>> expression, Action<T> handler)
         {
             if (source == null)
-                throw new ObjectDisposedException ("source");
+                throw new ObjectDisposedException (nameof(source));
             if (expression == null)
-                throw new ArgumentNullException ("expression");
+                throw new ArgumentNullException (nameof(expression));
 
             string propertyName = GetPropertyName (expression);
             if (String.IsNullOrEmpty (propertyName))
-                throw new ArgumentException ("'expression' did not provide a property name.");
+                throw new ArgumentException ($"'{nameof(expression)}' did not provide a property name.");
 
             if (handler == null)
-                throw new ArgumentNullException ("handler");
+                throw new ArgumentNullException (nameof(handler));
 
             pcToHandlerMap.Add (propertyName, handler);
             return this;
@@ -135,13 +133,13 @@ namespace XamarinUniversity
         public PropertyObserver<T> UnregisterHandler (Expression<Func<T, object>> expression)
         {
             if (source == null)
-                throw new ObjectDisposedException ("source");
+                throw new ObjectDisposedException (nameof(source));
             if (expression == null)
-                throw new ArgumentNullException ("expression");
+                throw new ArgumentNullException (nameof(expression));
 
             string propertyName = GetPropertyName (expression);
             if (String.IsNullOrEmpty (propertyName))
-                throw new ArgumentException ("'expression' did not provide a property name.");
+                throw new ArgumentException ($"'{nameof(expression)}' did not provide a property name.");
 
             pcToHandlerMap.Remove (propertyName);
 
@@ -167,8 +165,7 @@ namespace XamarinUniversity
             Debug.Assert (memberExpression != null, "Please provide a lambda expression like 'n => n.PropertyName'");
 
             if (memberExpression != null) {
-                var propertyInfo = memberExpression.Member as PropertyInfo;
-                if (propertyInfo != null)
+                if (memberExpression.Member is PropertyInfo propertyInfo)
                     return propertyInfo.Name;
             }
 

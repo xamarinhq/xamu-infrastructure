@@ -2,9 +2,9 @@
 // GroupedObservableCollection.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,10 @@
 // THE SOFTWARE.
 
 using System.ComponentModel;
-using XamarinUniversity.Infrastructure;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace XamarinUniversity.Collections
+namespace XamarinUniversity.Infrastructure
 {
     /// <summary>
     /// This is a simple observable collection which has a GroupBy key which can
@@ -38,27 +37,23 @@ namespace XamarinUniversity.Collections
     /// <typeparam name="TKey">The type to use for the grouping key</typeparam>
     /// <typeparam name="TValue">The type to use for the items</typeparam>
     [DebuggerDisplay ("Count={Count}")]
-    public class GroupedObservableCollection<TKey,TValue> 
-        : OptimizedObservableCollection<TValue>
+    public class GroupedObservableCollection<TKey,TValue> : OptimizedObservableCollection<TValue>
     {
         // Data
         bool hasItems;
-        readonly TKey key;
 
         /// <summary>
         /// The read-only grouping key.
         /// </summary>
         /// <value>The group title.</value>
-        public TKey Key { get { return key; } }
+        public TKey Key { get; }
 
         /// <summary>
         /// Simple property to allow us to collapse a group when it has no items.
         /// </summary>
         /// <value><c>true</c> if has items; otherwise, <c>false</c>.</value>
         public bool HasItems {
-            get {
-                return hasItems;
-            }
+            get => hasItems;
 
             set {
                 if (hasItems != value) {
@@ -73,7 +68,7 @@ namespace XamarinUniversity.Collections
         /// </summary>
         public GroupedObservableCollection (TKey key)
         {
-            this.key = key;
+            Key = key;
         }
 
         /// <summary>
@@ -84,7 +79,7 @@ namespace XamarinUniversity.Collections
         public GroupedObservableCollection (TKey key, IEnumerable<TValue> items)
             : base(items)
         {
-            this.key = key;
+            Key = key;
         }
 
         /// <summary>

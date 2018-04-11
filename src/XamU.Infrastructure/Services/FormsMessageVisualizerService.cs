@@ -2,9 +2,9 @@
 // FormsMessageVisualizerService.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +25,8 @@
 // THE SOFTWARE.
 
 using System.Threading.Tasks;
-using XamarinUniversity.Interfaces;
 using Xamarin.Forms;
+using XamarinUniversity.Infrastructure;
 
 namespace XamarinUniversity.Services
 {
@@ -49,12 +49,12 @@ namespace XamarinUniversity.Services
             string title, string message, string ok, string cancel=null)
         {
             if (cancel == null) {
-                await Application.Current.MainPage.DisplayAlert(title, message, ok);
+                await Application.Current.MainPage.DisplayAlert(title, message, ok).ConfigureAwait(false);
                 return true;
             }
 
             return await Application.Current.MainPage.DisplayAlert(
-                title, message, ok, cancel);
+                title, message, ok, cancel).ConfigureAwait(false);
         }
     }
 }

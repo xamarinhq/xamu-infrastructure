@@ -2,9 +2,9 @@
 // ExceptionExtensions.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,8 +49,8 @@ namespace XamarinUniversity.Infrastructure
             AggregateException aex = ex as AggregateException;
             if (aex != null)
             {
-                sb.AppendLine ("Aggregate Exception.");
-                aex = aex.Flatten ();               
+                sb.AppendLine (nameof(AggregateException));
+                aex = aex.Flatten ();
                 for (int i = 0; i < aex.InnerExceptions.Count; i++) {
                     current = aex.InnerExceptions [i];
                     sb.AppendLine (current.Flatten ($"{i}: ", includeStackTrace));

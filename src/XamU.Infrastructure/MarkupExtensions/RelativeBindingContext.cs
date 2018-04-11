@@ -2,9 +2,9 @@
 // RelativeBindingContext.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,7 @@ namespace XamarinUniversity.Infrastructure
             Debug.Assert (pvt != null && rootProvider != null);
 
             // BUGBUG: unfortunately, Forms currently does not implement the 'TargetProperty'
-            // value from IProvideValueTarget. That means we cannot tell what propery is
+            // value from IProvideValueTarget. That means we cannot tell what property is
             // being assigned here; so we assume BindingContext but allow you to manually
             // switch that off through the TrackBindingChanges property for this extension.
 

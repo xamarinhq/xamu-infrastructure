@@ -2,9 +2,9 @@
 // NavigateToCommand.cs
 //
 // Author:
-//       Mark Smith <mark.smith@xamarin.com>
+//       Mark Smith <smmark@microsoft.com>
 //
-// Copyright (c) 2016 Xamarin, Microsoft.
+// Copyright (c) 2016-2018 Xamarin, Microsoft.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@
 
 using System;
 using System.Windows.Input;
-using XamarinUniversity.Interfaces;
+using XamarinUniversity.Infrastructure;
 using XamarinUniversity.Services;
 
 namespace XamarinUniversity.Commands
@@ -73,7 +73,7 @@ namespace XamarinUniversity.Commands
             {
                 var ns = XamUInfrastructure.ServiceLocator.Get<INavigationService> ();
                 if (ns != null) {
-                    await ns.NavigateAsync (parameter);
+                    await ns.NavigateAsync (parameter).ConfigureAwait(false);
                 }
             }
         }
