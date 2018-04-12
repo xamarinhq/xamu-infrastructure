@@ -31,4 +31,4 @@ PM > Install-Package XamarinUniversity.Core
 
 * [Contribution Guide](https://github.com/xamarinhq/xamu-infrastructure/blob/master/CONTRIBUTING.md)
 
-#### Copyright (C) 2016 Xamarin University, Microsoft
+Copyright (C) 2016-2018 Xamarin University, Microsoft
