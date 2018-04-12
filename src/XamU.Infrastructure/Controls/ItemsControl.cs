@@ -55,15 +55,16 @@ namespace XamarinUniversity.Controls
         }
 
         /// <summary>
-        /// Bindable property for the orientation of the layout panel
+        /// Bindable property for the orientation of the default layout panel
         /// </summary>
         public static readonly BindableProperty OrientationProperty = BindableProperty.Create(
             nameof(Orientation), typeof(StackOrientation), typeof(ItemsControl),
             defaultValue: StackOrientation.Vertical,
-            propertyChanged: OnOrientationPropertyChanged);
+            propertyChanged: (bindable, oldValue, newValue) => ((ItemsControl)bindable).OnOrientationPropertyChanged((StackOrientation)oldValue, (StackOrientation)newValue));
 
         /// <summary>
-        /// Gets or Sets the Orientation for the layout panel
+        /// Gets or Sets the Orientation for the default layout panel
+        /// This is not used if you replace the panel!
         /// </summary>
         /// <value>Orientation value</value>
         public StackOrientation Orientation
@@ -73,15 +74,16 @@ namespace XamarinUniversity.Controls
         }
 
         /// <summary>
-        /// Bindable property for the Spacing of the layout panel
+        /// Bindable property for the Spacing of the default layout panel
         /// </summary>
         public static readonly BindableProperty SpacingProperty = BindableProperty.Create(
             nameof(Spacing), typeof(double), typeof(ItemsControl),
             defaultValue: 10.0,
-            propertyChanged: OnSpacingPropertyChanged);
+            propertyChanged: (bindable, oldValue, newValue) => ((ItemsControl)bindable).OnSpacingPropertyChanged((double)oldValue, (double)newValue));
 
         /// <summary>
-        /// Gets or Sets the Spacing for the layout panel
+        /// Gets or Sets the Spacing for the default layout panel
+        /// This is not used if you replace the panel!
         /// </summary>
         /// <value>Spacing value</value>
         public double Spacing
@@ -95,10 +97,12 @@ namespace XamarinUniversity.Controls
         /// is no data template assigned.
         /// </summary>
         public static readonly BindableProperty ItemStyleProperty = BindableProperty.Create(
-            nameof(ItemStyle), typeof(Style), typeof(ItemsControl), propertyChanged: OnItemStylePropertyChanged);
+            nameof(ItemStyle), typeof(Style), typeof(ItemsControl),
+            propertyChanged: (bindable, oldValue, newValue) => ((ItemsControl)bindable).OnItemStylePropertyChanged(newValue as Style));
 
         /// <summary>
         /// Gets or sets the item style used for dynamically generated labels.
+        /// This is not used if you apply a DataTemplate
         /// </summary>
         /// <value>The item style.</value>
         public Style ItemStyle
@@ -108,10 +112,29 @@ namespace XamarinUniversity.Controls
         }
 
         /// <summary>
+        /// Bindable property for the panel type
+        /// </summary>
+        public static readonly BindableProperty ItemsPanelProperty = BindableProperty.Create(
+            nameof(ItemsPanel), typeof(Xamarin.Forms.Layout<View>), typeof(ItemsControl),
+            propertyChanged: (bindable, oldValue, newValue) => ((ItemsControl)bindable).OnItemsPanelPropertyChanged((Xamarin.Forms.Layout<View>)oldValue, (Xamarin.Forms.Layout<View>)newValue));
+
+        /// <summary>
+        /// Gets or Sets the container used for the layout panel
+        /// If not set, a StackLayout is used.
+        /// </summary>
+        /// <value>Orientation value</value>
+        public Xamarin.Forms.Layout<View> ItemsPanel
+        {
+            get { return (Xamarin.Forms.Layout<View>)GetValue(ItemsPanelProperty); }
+            set { SetValue(ItemsPanelProperty, value); }
+        }
+
+        /// <summary>
         /// Bindable property for the data source
         /// </summary>
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(
-            nameof(ItemsSource), typeof(IList), typeof(ItemsControl), propertyChanging: OnItemsSourceChanged);
+            nameof(ItemsSource), typeof(IList), typeof(ItemsControl),
+            propertyChanging: (bindable, oldValue, newValue) => ((ItemsControl)bindable).OnItemsSourceChanged((IList)oldValue, (IList)newValue));
 
         /// <summary>
         /// Gets or sets the items source - can be any collection of elements.
@@ -127,7 +150,8 @@ namespace XamarinUniversity.Controls
         /// Bindable property for the data template to visually represent each item.
         /// </summary>
         public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(
-            nameof(ItemTemplate), typeof(DataTemplate), typeof(ItemsControl), propertyChanging: OnItemTemplateChanged);
+            nameof(ItemTemplate), typeof(DataTemplate), typeof(ItemsControl),
+            propertyChanging: (bindable, oldValue, newValue) => ((ItemsControl)bindable).OnItemTemplateChanged((DataTemplate)oldValue, (DataTemplate)newValue));
 
         /// <summary>
         /// Gets or sets the item template used to generate the visuals for a single item.
@@ -140,8 +164,8 @@ namespace XamarinUniversity.Controls
         }
 
         // Data
-        StackLayout stack;
         Label noItemsLabel;
+        StackLayout stack;
 
         /// <summary>
         /// Initializes an ItemsControl.
@@ -150,19 +174,12 @@ namespace XamarinUniversity.Controls
         {
             Padding = new Thickness(5, 0, 5, 5);
 
-            stack = new StackLayout
-            {
-                Spacing = this.Spacing,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                Orientation = this.Orientation
-            };
-
             noItemsLabel = new Label
             {
                 HorizontalTextAlignment = TextAlignment.Center,
                 VerticalTextAlignment = TextAlignment.Center
             };
+
             noItemsLabel.SetBinding(Label.StyleProperty, new Binding(nameof(ItemStyle), source: this));
             noItemsLabel.SetBinding(Label.TextProperty, new Binding(nameof(PlaceholderText), source: this));
 
@@ -170,14 +187,27 @@ namespace XamarinUniversity.Controls
         }
 
         /// <summary>
-        /// This is called when the Orientation property is changed
+        /// Retrieve or create the container for children
         /// </summary>
-        /// <param name="bindable">ItemsSource</param>
-        /// <param name="oldValue">Old value.</param>
-        /// <param name="newValue">New value.</param>
-        static void OnOrientationPropertyChanged(BindableObject bindable, object oldValue, object newValue)
+        /// <param name="createDefaultContainer">True to create default container if ItemsPanel is not set</param>
+        /// <returns>Layout container</returns>
+        private Xamarin.Forms.Layout<View> GetOrCreateLayoutContainer(bool createDefaultContainer)
         {
-            ((ItemsControl)bindable).OnOrientationPropertyChangedImpl((StackOrientation)oldValue, (StackOrientation)newValue);
+            if (ItemsPanel != null)
+                return ItemsPanel;
+
+            if (createDefaultContainer && stack == null)
+            {
+                stack = new StackLayout
+                {
+                    Orientation = this.Orientation,
+                    Spacing = this.Spacing,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    VerticalOptions = LayoutOptions.FillAndExpand
+                };
+            }
+
+            return stack;
         }
 
         /// <summary>
@@ -185,23 +215,12 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="oldValue">Old value.</param>
         /// <param name="newValue">New value.</param>
-        private void OnOrientationPropertyChangedImpl(StackOrientation oldValue, StackOrientation newValue)
+        private void OnOrientationPropertyChanged(StackOrientation oldValue, StackOrientation newValue)
         {
-            if (oldValue != newValue)
+            if (stack != null && oldValue != newValue)
             {
                 stack.Orientation = newValue;
             }
-        }
-
-        /// <summary>
-        /// This is called when the Spacing property is changed
-        /// </summary>
-        /// <param name="bindable">ItemsSource</param>
-        /// <param name="oldValue">Old value.</param>
-        /// <param name="newValue">New value.</param>
-        static void OnSpacingPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((ItemsControl)bindable).OnSpacingPropertyChangedImpl((double)oldValue, (double)newValue);
         }
 
         /// <summary>
@@ -209,23 +228,40 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="oldValue">Old value.</param>
         /// <param name="newValue">New value.</param>
-        private void OnSpacingPropertyChangedImpl(double oldValue, double newValue)
+        private void OnSpacingPropertyChanged(double oldValue, double newValue)
         {
-            if (oldValue != newValue)
+            if (stack != null && oldValue != newValue)
             {
                 stack.Spacing = newValue;
             }
         }
 
         /// <summary>
-        /// This is called when the ItemTemplate property is changed
+        /// This is called when the ItemsPanel property is changed. We need to clear the old object and
+        /// fill our data into the new one.
         /// </summary>
-        /// <param name="bindable">ItemsSource</param>
-        /// <param name="oldValue">Old value.</param>
-        /// <param name="newValue">New value.</param>
-        static void OnItemTemplateChanged(BindableObject bindable, object oldValue, object newValue)
+        /// <param name="oldValue">Old panel</param>
+        /// <param name="newValue">New panel</param>
+        private void OnItemsPanelPropertyChanged(Xamarin.Forms.Layout<View> oldValue, Xamarin.Forms.Layout<View> newValue)
         {
-            ((ItemsControl)bindable).OnItemTemplateChangedImpl((DataTemplate)oldValue, (DataTemplate)newValue);
+            this.Content = null; // temporarily show nothing.
+
+            if (stack != null)
+            {
+                stack.Children.Clear();
+                if (newValue != null)
+                {
+                    stack = null;
+                }
+            }
+
+            if (oldValue != null)
+            {
+                oldValue.Children.Clear();
+            }
+
+            // Will recreate the container if necessary
+            FillContainer(newValue, ItemsSource, ItemTemplate);
         }
 
         /// <summary>
@@ -233,30 +269,21 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="oldValue">Old value.</param>
         /// <param name="newValue">New value.</param>
-        private void OnItemTemplateChangedImpl(DataTemplate oldValue, DataTemplate newValue)
+        private void OnItemTemplateChanged(DataTemplate oldValue, DataTemplate newValue)
         {
             if (oldValue == newValue)
                 return;
 
             var data = this.ItemsSource;
-            if (data != null)
+            if (data?.Count > 0)
             {
                 // Remove all the generated visuals
-                stack.Children.Clear();
-                // Regenerate
-                FillContainer(data, newValue);
-            }
-        }
+                var container = GetOrCreateLayoutContainer(true);
+                container.Children.Clear();
 
-        /// <summary>
-        /// This is called when the underlying data source is changed.
-        /// </summary>
-        /// <param name="bindable">ItemsSource</param>
-        /// <param name="oldValue">Old value.</param>
-        /// <param name="newValue">New value.</param>
-        static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((ItemsControl)bindable).OnItemsSourceChangedImpl((IList)oldValue, (IList)newValue);
+                // Regenerate
+                FillContainer(container, data, newValue);
+            }
         }
 
         /// <summary>
@@ -266,7 +293,7 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="oldValue">Old value.</param>
         /// <param name="newValue">New value.</param>
-        void OnItemsSourceChangedImpl(IList oldValue, IList newValue)
+        void OnItemsSourceChanged(IList oldValue, IList newValue)
         {
             // Unsubscribe from the old collection
             if (oldValue != null)
@@ -278,13 +305,18 @@ namespace XamarinUniversity.Controls
 
             if (newValue == null)
             {
-                stack.Children.Clear();
+                var container = GetOrCreateLayoutContainer(false);
+                if (container != null)
+                {
+                    container.Children.Clear();
+                    stack = null;
+                }
+
                 Content = noItemsLabel;
             }
             else
             {
-                Content = stack;
-                FillContainer(newValue, ItemTemplate);
+                FillContainer(null, newValue, ItemTemplate);
                 INotifyCollectionChanged ncc = newValue as INotifyCollectionChanged;
                 if (ncc != null)
                     ncc.CollectionChanged += OnCollectionChanged;
@@ -292,37 +324,30 @@ namespace XamarinUniversity.Controls
         }
 
         /// <summary>
-        /// Called when the Label style is changed.
-        /// </summary>
-        /// <param name="bindable">ItemsControl</param>
-        /// <param name="oldValue">Old value.</param>
-        /// <param name="newValue">New value.</param>
-        static void OnItemStylePropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            ((ItemsControl)bindable).OnItemStylePropertyChangedImpl(newValue as Style);
-        }
-
-        /// <summary>
         /// Instance method called when the label style is changed through the
         /// <see cref="ItemStyle"/> property. This applies the new style to all the labels.
         /// </summary>
         /// <param name="style">Style.</param>
-        void OnItemStylePropertyChangedImpl(Style style)
+        void OnItemStylePropertyChanged(Style style)
         {
             // Ignore if we have a data template.
             if (ItemTemplate != null)
                 return;
 
-            foreach (View view in stack.Children)
+            var container = GetOrCreateLayoutContainer(false);
+            if (container != null)
             {
-                Label label = view as Label;
-                if (label != null)
+                foreach (View view in container.Children)
                 {
+                    Label label = view as Label;
+                    if (label != null)
+                    {
 
-                    if (style == null)
-                        label.ClearValue(Label.StyleProperty);
-                    else
-                        label.Style = style;
+                        if (style == null)
+                            label.ClearValue(Label.StyleProperty);
+                        else
+                            label.Style = style;
+                    }
                 }
             }
         }
@@ -332,16 +357,32 @@ namespace XamarinUniversity.Controls
         /// each item in the collection; it can reuse visuals which were created
         /// previously and simply changes the binding context.
         /// </summary>
+        /// <param name="container">Visual container to add items to</param>
         /// <param name="newValue">New items to display</param>
         /// <param name="itemTemplate">ItemTemplate to use (null for Label)</param>
-        void FillContainer(IList newValue, DataTemplate itemTemplate)
+        void FillContainer(Xamarin.Forms.Layout<View> container, IList newValue, DataTemplate itemTemplate)
         {
-            var itemStyle = ItemStyle;
-            var visuals = stack.Children;
-
-            for (int i = 0; i < this.stack.Children.Count; i++)
+            if (container == null)
             {
-                this.stack.Children[i].IsVisible = i < newValue.Count;
+                container = GetOrCreateLayoutContainer(true);
+            }
+
+            // No items? Show the "no content" label.
+            if (newValue == null || newValue.Count == 0)
+            {
+                Content = noItemsLabel;
+                container.Children.Clear();
+                stack = null;
+                return;
+            }
+
+            // Add items
+            var itemStyle = ItemStyle;
+            var visuals = container.Children;
+
+            for (int i = 0; i < visuals.Count; i++)
+            {
+                visuals[i].IsVisible = i < newValue.Count;
             }
 
             for (int i = 0; i < newValue.Count; i++)
@@ -373,7 +414,8 @@ namespace XamarinUniversity.Controls
                 {
                     if (itemTemplate != null)
                     {
-                        InflateTemplate(itemTemplate, dataItem);
+                        var view = InflateTemplate(itemTemplate, dataItem);
+                        container.Children.Add(view);
                     }
                     else
                     {
@@ -382,12 +424,12 @@ namespace XamarinUniversity.Controls
                         {
                             label.Style = itemStyle;
                         }
-                        stack.Children.Add(label);
+                        container.Children.Add(label);
                     }
                 }
             }
 
-            Content = (stack.Children.Count == 0) ? (View)noItemsLabel : stack;
+            Content = container;
         }
 
         /// <summary>
@@ -396,7 +438,7 @@ namespace XamarinUniversity.Controls
         /// </summary>
         /// <param name="template">Template.</param>
         /// <param name="item">Item.</param>
-        void InflateTemplate(DataTemplate template, object item)
+        View InflateTemplate(DataTemplate template, object item)
         {
             // Pull real template from selector if necessary.
             var dSelector = template as DataTemplateSelector;
@@ -407,8 +449,9 @@ namespace XamarinUniversity.Controls
             if (view != null)
             {
                 view.BindingContext = item;
-                stack.Children.Add(view);
             }
+
+            return view;
         }
 
         /// <summary>
@@ -420,8 +463,7 @@ namespace XamarinUniversity.Controls
         /// <param name="e">E.</param>
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            FillContainer((IList)sender, ItemTemplate);
+            FillContainer(null, (IList)sender, ItemTemplate);
         }
     }
 }
-

@@ -2,6 +2,8 @@
 **Breaking Change** Refined namespaces - might need to change some `using` statements.
 Simplified and cleaned up some code 
 Added a few new converters
+Added `WrapLayout` from Xamarin docs
+Added support to `ItemsControl` to replace the panel
 
 ## [1.5.0]
 Replaced PCL support with .NET Standard 1.0 and 2.0
