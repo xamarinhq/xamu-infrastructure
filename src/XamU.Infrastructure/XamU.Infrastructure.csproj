@@ -4,7 +4,7 @@
     <TargetFrameworks></TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid71;uap10.0.16299</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid71;</TargetFrameworks>
-    <Version>1.1.6.1</Version>
+    <Version>1.1.7</Version>
     <PackageTitle>XamarinUniversity.Infrastructure</PackageTitle>
     <Title>Xamarin University Infrastructure Library</Title>
     <Authors>Microsoft, Xamarin University</Authors>
@@ -61,12 +61,12 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('netstandard')) ">
-    <PackageReference Include="System.ComponentModel" Version="4.0.1" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('uap10.0')) ">
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.8" />
-    <PackageReference Include="System.ComponentModel" Version="4.0.1" />
+    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <SDKReference Include="WindowsMobile, Version=10.0.16299.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>

@@ -1,6 +1,6 @@
 # Xamarin University Infrastructure Library
 
-[![Build Status](https://travis-ci.org/xamarinhq/xamu-infrastructure.svg?branch=master)](https://travis-ci.org/xamarinhq/xamu-infrastructure)
+[![Build Status](https://xamu-labs.visualstudio.com/_apis/public/build/definitions/454c2b9a-92a4-4467-a3ea-f1a914619cf3/3/badge)
 
 This is a set of useful classes for Xamarin and Xamarin.Forms development which are used in a varity of labs in Xamarin University.
 
