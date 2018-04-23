@@ -23,6 +23,8 @@ PM > Install-Package XamarinUniversity.Core
 
 ## Helpful links
 
+* [Change log](https://github.com/xamarinhq/xamu-infrastructure/blob/master/CHANGELOG.md)
+
 * [NuGet package](https://www.nuget.org/packages/XamarinUniversity.Infrastructure/)
 
 * [Documentation](https://github.com/xamarinhq/xamu-infrastructure/wiki)
