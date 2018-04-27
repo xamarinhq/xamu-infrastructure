@@ -71,18 +71,8 @@ namespace XamarinUniversity.Infrastructure
         /// </summary>
         /// <returns>Task</returns>
         /// <param name="key">Navigation key.</param>
-        /// <param name="state">State (can be ViewModel)</param>
+        /// <param name="state">State (can be ViewModel, or state passed to IViewModelNavigationInit)</param>
         Task NavigateAsync(object key, object state);
-
-        /// <summary>
-        /// Navigate to a page using the known key. Assigns the passed ViewModel as the
-        /// BindingContext, and supplies the state to the IViewModelNavigationInit.IntializeAsync implementation.
-        /// </summary>
-        /// <returns>Task</returns>
-        /// <param name="key">Navigation key.</param>
-        /// <param name="viewModel">ViewModel</param>
-        /// <param name="state">Optional state parameter</param>
-        Task NavigateAsync(object key, object viewModel, object state);
 
         /// <summary>
         /// Returns true/false whether we can go backwards on the Nav Stack.
@@ -108,17 +98,8 @@ namespace XamarinUniversity.Infrastructure
         /// </summary>
         /// <returns>Async response</returns>
         /// <param name="key">Navigation key.</param>
-        /// <param name="state">State (often ViewModel)</param>
+        /// <param name="state">State (can be ViewModel, or state passed to IViewModelNavigationInit)</param>
         Task PushModalAsync(object key, object state);
-
-        /// <summary>
-        /// Push a page onto the modal stack.
-        /// </summary>
-        /// <returns>Async response</returns>
-        /// <param name="key">Navigation key.</param>
-        /// <param name="viewModel">ViewModel to assign (can be null)</param>
-        /// <param name="state">Initialization state (can be null)</param>
-        Task PushModalAsync(object key, object viewModel, object state);
 
         /// <summary>
         /// Pops the last page off the modal stack

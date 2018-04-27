@@ -2,7 +2,6 @@
 ### Breaking changes
 - New property on `IntegerToBoolean` which allows for a test of `One` vs. `Zero`.
 - The `NavigateAsync` methods on `INavigationService` have been split into multiple methods instead of default parameters.
-- There's a new version of the `INavigationService.NavigateAsync` and `INavigationService.PushModalAsync` which take _both_ viewModel and state parameters.
 - There's a new interface `IViewModelNavigationInit` which is used to initialize a ViewModel post-creation.
 - `FormsNavigationPageService` supports the new ViewModel initialization support.
 - `SimpleViewModel` implements the new `IViewModelNavigationInit` interface and forwards it to a virtual method.
