@@ -41,6 +41,11 @@ namespace XamarinUniversity.Converters
         public bool ZeroOrNull { get; set; }
 
         /// <summary>
+        /// Boolean value for one; defaults to true.
+        /// </summary>
+        public bool One { get; set; }
+
+        /// <summary>
         /// Boolean value for non-zero; defaults to true.
         /// </summary>
         public bool Positive { get; set; }
@@ -57,6 +62,7 @@ namespace XamarinUniversity.Converters
         public IntegerToBooleanConverter()
         {
             Positive = true;
+            One = true;
             ZeroOrNull = false;
             Negative = false;
         }
@@ -76,10 +82,10 @@ namespace XamarinUniversity.Converters
                 return ZeroOrNull;
 
             int result = System.Convert.ToInt32 (value, culture);
+
             return result < 0 ? Negative 
-                : result == 0 
-                    ? ZeroOrNull 
-                    : Positive;
+                : result == 0 ? ZeroOrNull 
+                    : result == 1 ? One : Positive;
         }
 
         /// <summary>

@@ -39,7 +39,9 @@ namespace XamarinUniversity.Services
     /// </summary>
     public class FormsNavigationPageService : INavigationPageService
     {
+#if NETSTANDARD1_0
         private static readonly Task TaskCompleted = Task.FromResult(0);
+#endif
         private INavigation navigation;
         private Dictionary<object, Func<Page>> registeredPages;
         private Dictionary<object, Func<object, Page>> registeredStatePages;
@@ -82,8 +84,12 @@ namespace XamarinUniversity.Services
             {
                 if (value == null)
                     throw new ArgumentNullException (nameof(KeyComparer), "KeyComparer cannot be null.");
+
                 if (registeredPages != null)
+                {
                     throw new InvalidOperationException ("Cannot set KeyComparer once pages are added.");
+                }
+
                 registeredPages = new Dictionary<object, Func<Page>> (value);
                 registeredStatePages = new Dictionary<object, Func<object, Page>>(value);
             }
@@ -104,19 +110,21 @@ namespace XamarinUniversity.Services
         /// Register a page with a known key. When the page is
         /// navigated to, the optional state will be set as the BindingContext.
         /// </summary>
-        /// <param name="pageKey">Page key.</param>
+        /// <param name="key">Page key.</param>
         /// <param name="creator">Creator.</param>
-	    public void RegisterPage(object pageKey, Func<Page> creator)
+	    public void RegisterPage(object key, Func<Page> creator)
 	    {
-            if (pageKey == null)
-                throw new ArgumentNullException(nameof(pageKey));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
 	        if (creator == null)
 	            throw new ArgumentNullException(nameof (creator));
 
             if (registeredPages == null)
+            {
                 registeredPages = new Dictionary<object, Func<Page>> ();
-   
-            registeredPages.Add(pageKey, creator);
+            }
+
+            registeredPages.Add(key, creator);
 	    }
 
         /// <summary>
@@ -124,19 +132,21 @@ namespace XamarinUniversity.Services
         /// When the page is created/navigated to, the state may be used to initialize
         /// the page. It will not be set as the BindingContext.
         /// </summary>
-        /// <param name="pageKey">Page key.</param>
+        /// <param name="key">Page key.</param>
         /// <param name="creator">Creator.</param>
-	    public void RegisterPage(object pageKey, Func<object,Page> creator)
+	    public void RegisterPage(object key, Func<object,Page> creator)
         {
-            if (pageKey == null)
-                throw new ArgumentNullException(nameof(pageKey));
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
             if (creator == null)
                 throw new ArgumentNullException(nameof(creator));
 
             if (registeredStatePages == null)
+            {
                 registeredStatePages = new Dictionary<object, Func<object, Page>>();
+            }
 
-            registeredStatePages.Add(pageKey, creator);
+            registeredStatePages.Add(key, creator);
         }
 
         /// <summary>
@@ -152,7 +162,10 @@ namespace XamarinUniversity.Services
                 throw new ArgumentNullException(nameof(action));
 
             if (registeredActions == null)
+            {
                 registeredActions = new Dictionary<object, Action<object>>();
+            }
+
             registeredActions.Add(key, action);
         }
 
@@ -169,7 +182,10 @@ namespace XamarinUniversity.Services
                 throw new ArgumentNullException(nameof(action));
 
             if (registeredActions == null)
+            {
                 registeredActions = new Dictionary<object, Action<object>>();
+            }
+
             registeredActions.Add(key, unused => action());
         }
 
@@ -193,8 +209,8 @@ namespace XamarinUniversity.Services
         /// <returns>The page by key.</returns>
         /// <param name="pageKey">Page key.</param>
         /// <param name="state">Optional state passed to function</param>
-        /// <param name="assignViewModel">True/False whether state was used by page</param>
-        Page GetPageByKey(object pageKey, object state, out bool assignViewModel)
+        /// <param name="usedState">True/False whether state was used by page</param>
+        Page GetPageByKey(object pageKey, object state, out bool usedState)
         {
             if (pageKey == null)
                 throw new ArgumentNullException (nameof (pageKey));
@@ -204,11 +220,11 @@ namespace XamarinUniversity.Services
             if (registeredStatePages?.TryGetValue(pageKey, out stateCreator) == true
                 && stateCreator != null)
             {
-                assignViewModel = false;
+                usedState = true;
                 return stateCreator.Invoke(state);
             }
 
-            assignViewModel = true;
+            usedState = false;
             Func<Page> creator = null;
             return registeredPages?.TryGetValue(pageKey, out creator) == true && creator != null ? creator.Invoke() : null;
         }
@@ -292,16 +308,41 @@ namespace XamarinUniversity.Services
         }
 
         /// <summary>
+        /// Navigate to a page using the known key.
+        /// </summary>
+        /// <param name="key">Page key</param>
+        /// <returns>Task</returns>
+        public Task NavigateAsync(object key)
+        {
+            return NavigateAsync(key, null, null);
+        }
+
+        /// <summary>
+        /// Navigate to a page using the known key.
+        /// The state object (if not null) will be assigned as the BindingContext
+        /// if the View doesn't assign it as part of construction. If there _is_ a BindingContext,
+        /// then the state will be passed to the IViewModelNavigationInit.IntializeAsync implementation.
+        /// </summary>
+        /// <returns>Task</returns>
+        /// <param name="key">Navigation key.</param>
+        /// <param name="state">State (can be ViewModel)</param>
+        public Task NavigateAsync(object key, object state)
+        {
+            return NavigateAsync(key, null, state);
+        }
+
+        /// <summary>
         /// Navigate to a page using the passed key. This also assigns the
         /// BindingContext if a ViewModel is passed.
         /// </summary>
         /// <returns>Task representing the navigation</returns>
-        /// <param name="pageKey">Page key.</param>
-        /// <param name="state">Optional state or View model.</param>
-        public Task NavigateAsync(object pageKey, object state = null)
+        /// <param name="key">Page key.</param>
+        /// <param name="viewModel">ViewModel (can be null)</param>
+        /// <param name="state">Optional state (can be null)</param>
+        public async Task NavigateAsync(object key, object viewModel, object state)
         {
-            if (pageKey == null)
-                throw new ArgumentNullException (nameof (pageKey));
+            if (key == null)
+                throw new ArgumentNullException (nameof (key));
 
             // On a phone, always hide master page when we navigate since we
             // will be using the Detail page.
@@ -315,24 +356,26 @@ namespace XamarinUniversity.Services
             }
 
             // Look for a registered page first. If that's not available, look for an action.
-            bool assignViewModel;
-            var page = GetPageByKey(pageKey, state, out assignViewModel);
-            if (page == null) {
+            bool usedState;
+            var page = GetPageByKey(key, state, out usedState);
+            if (page == null)
+            {
                 if (registeredActions != null)
                 {
                     Action<object> work;
-                    if (registeredActions.TryGetValue(pageKey, out work))
+                    if (registeredActions.TryGetValue(key, out work))
                     {
                         work.Invoke(state);
                     }
                 }
-                return TaskCompleted;
+                return;
             }
 
-            if (state != null && assignViewModel)
-                page.BindingContext = state;
+            if (page == null)
+                throw new ArgumentException("Cannot navigate to unregistered page", nameof(key));
 
-            return Navigation.PushAsync(page);
+            await InitializeViewModel(page, viewModel, usedState ? null : state);
+            await Navigation.PushAsync(page).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -347,29 +390,88 @@ namespace XamarinUniversity.Services
         /// <returns>Task representing the navigation event.</returns>
         public Task GoBackAsync()
         {
-            return !CanGoBack ? TaskCompleted : Navigation.PopAsync();
+            return !CanGoBack
+#if NETSTANDARD1_0
+                ? TaskCompleted : Navigation.PopAsync();
+#else
+                ? Task.CompletedTask : Navigation.PopAsync();
+#endif
         }
 
         /// <summary>
         /// Pushes a new page modally onto the navigation stack.
         /// </summary>
         /// <returns>Task representing the modal navigation.</returns>
-        /// <param name="pageKey">Page key.</param>
-        /// <param name="viewModel">View model.</param>
-        public Task PushModalAsync(object pageKey, object viewModel = null)
+        /// <param name="key">Page key.</param>
+        public Task PushModalAsync(object key)
         {
-            if (pageKey == null)
-                throw new ArgumentNullException (nameof (pageKey));
+            return PushModalAsync(key, null, null);
+        }
 
-            bool assignViewModel;
-            var page = GetPageByKey(pageKey, viewModel, out assignViewModel);
+        /// <summary>
+        /// Pushes a new page modally onto the navigation stack.
+        /// </summary>
+        /// <returns>Task representing the modal navigation.</returns>
+        /// <param name="key">Page key.</param>
+        /// <param name="state">State object for VM initialization</param>
+        public Task PushModalAsync(object key, object state)
+        {
+            return PushModalAsync(key, null, state);
+        }
+
+        /// <summary>
+        /// Pushes a new page modally onto the navigation stack.
+        /// </summary>
+        /// <returns>Task representing the modal navigation.</returns>
+        /// <param name="key">Page key.</param>
+        /// <param name="viewModel">View model.</param>
+        /// <param name="state">State object for VM initialization</param>
+        public async Task PushModalAsync(object key, object viewModel, object state)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            bool usedState;
+            var page = GetPageByKey(key, viewModel, out usedState);
             if (page == null)
-                throw new ArgumentException("Cannot navigate to unregistered page", "pageKey");
+            {
+                throw new ArgumentException("Cannot navigate to unregistered page", nameof(key));
+            }
 
-            if (viewModel != null && assignViewModel)
-                page.BindingContext = viewModel;
+            await InitializeViewModel(page, viewModel, usedState ? null : state);
+            await Navigation.PushModalAsync(page).ConfigureAwait(false);
+        }
 
-            return Navigation.PushModalAsync(page);
+        /// <summary>
+        /// This method binds a newly created Page with a ViewModel and then
+        /// optionally initializes the ViewModel through the IViewModelNavigationInit interface
+        /// </summary>
+        /// <param name="page">New page</param>
+        /// <param name="viewModel">View Model to assign</param>
+        /// <param name="state">State to initialize with</param>
+        /// <returns>Task</returns>
+        private static async Task InitializeViewModel(Page page, object viewModel, object state)
+        {
+            if (page == null)
+                throw new ArgumentNullException(nameof(page));
+
+            // If no view model was assigned by the View as part of creation, 
+            // we will assume that we either have one to assign, or we should use the "state" as our VM.
+            if (page.BindingContext == null && (viewModel != null || state != null))
+            {
+                page.BindingContext = viewModel ?? state;
+                if (viewModel == null) // we used the state as the VM?
+                {
+                    state = null;
+                }
+            }
+
+            // See if our VM allows for initialization via our interface.
+            var vmInit = page.BindingContext as IViewModelNavigationInit;
+            if (vmInit != null)
+            {
+                await vmInit.IntializeAsync(state);
+            }
         }
 
         /// <summary>

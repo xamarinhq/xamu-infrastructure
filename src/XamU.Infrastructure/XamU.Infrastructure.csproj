@@ -4,7 +4,7 @@
     <TargetFrameworks></TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid71;uap10.0.16299</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid71;</TargetFrameworks>
-    <Version>1.1.7</Version>
+    <Version>2.0.0</Version>
     <PackageTitle>XamarinUniversity.Infrastructure</PackageTitle>
     <Title>Xamarin University Infrastructure Library</Title>
     <Authors>Microsoft, Xamarin University</Authors>

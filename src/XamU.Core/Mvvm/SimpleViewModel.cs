@@ -29,14 +29,20 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace XamarinUniversity.Infrastructure
 {
     /// <summary>
     /// This is a simple base class for MVVM.
     /// </summary>
-    public class SimpleViewModel : INotifyPropertyChanged
+    public class SimpleViewModel : INotifyPropertyChanged, IViewModelNavigationInit
     {
+#if NETSTANDARD1_0
+        // .NET Standard 1.0 doesn't support Task.CompletedTask :(
+        private readonly static Task CompletedTask = Task.FromResult(0);
+#endif
+
         /// <summary>
         /// Event to raise when a property is changed.
         /// </summary>
@@ -48,7 +54,7 @@ namespace XamarinUniversity.Infrastructure
         protected void RaiseAllPropertiesChanged()
         {
             // By convention, an empty string indicates all properties are invalid.
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
+            this.RaisePropertyChanged(string.Empty);
         }
 
         /// <summary>
@@ -66,7 +72,7 @@ namespace XamarinUniversity.Infrastructure
         /// Raises a specific property change event using a string for the property name.
         /// </summary>
         /// <param name="propertyName">Property name.</param>
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName= "")
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName= "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -108,6 +114,32 @@ namespace XamarinUniversity.Infrastructure
             this.RaisePropertyChanged(propertyName);
 
             return true;
+        }
+
+        /// <summary>
+        /// Method called to initialize a ViewModel when using the INavigationService.NavigateAsync 
+        /// built-in implementation.
+        /// </summary>
+        /// <param name="stateParameter">State parameter passed to NavigateAsync</param>
+        /// <returns>Task (might be completed)</returns>
+        protected virtual Task IntializeAsync(object stateParameter)
+        {
+#if NETSTANDARD1_0
+            return CompletedTask;
+#else
+            return Task.CompletedTask;
+#endif
+        }
+
+        /// <summary>
+        /// Implementation of the IViewModelNavigationInit.IntializeAsync method.
+        /// </summary>
+        /// <param name="stateParameter">State parameter passed to NavigateAsync</param>
+        /// <returns>Task (might be completed)</returns>
+        Task IViewModelNavigationInit.IntializeAsync(object stateParameter)
+        {
+            // Pass to virtual implementation for derived classes to override.
+            return this.IntializeAsync(stateParameter);
         }
     }
 }
