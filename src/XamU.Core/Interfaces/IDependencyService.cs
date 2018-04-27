@@ -27,6 +27,21 @@
 namespace XamarinUniversity.Infrastructure
 {
 	/// <summary>
+	/// Type of dependency creation to perform
+	/// </summary>
+	public enum DependencyScope
+	{
+		/// <summary>
+		/// Use a single instance (cached off)
+		/// </summary>
+		Global,
+        /// <summary>
+		/// Create a new instance of the dependency
+		/// </summary>
+		NewInstance
+	}
+
+	/// <summary>
 	/// Interface to wrap a ServiceLocator
 	/// </summary>
 	public interface IDependencyService
@@ -53,8 +68,21 @@ namespace XamarinUniversity.Infrastructure
 
 		/// <summary>
 		/// Retrieve a specific implementation from the locator.
+        /// Defaults to DependencyScope.Global
 		/// </summary>
 		/// <typeparam name="T">Type to look for</typeparam>
 		T Get<T>() where T : class;
+
+		/// <summary>
+		/// Retrieve a specific implementation from the locator.
+		/// </summary>
+		/// <typeparam name="T">Type to look for</typeparam>
+		/// <param name="scope">Global or new instance</param>
+        /// <remarks>
+        /// Note: the scope parameter is only used when the object was registered as a type and not an instance.
+        /// - In the case of an instance registration, that same instance is always returned.
+        /// - In the case of no registration found, a newly created object is always returned.
+        /// </remarks>
+		T Get<T>(DependencyScope scope) where T : class;
 	}
 }

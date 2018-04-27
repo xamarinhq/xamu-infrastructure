@@ -60,12 +60,25 @@ namespace XamarinUniversity.Services
         /// <typeparam name="T">The 1st type parameter.</typeparam>
         public T Get<T>() where T : class
         {
+            return Get<T>(DependencyScope.Global);
+        }
+
+        /// <summary>
+        /// Retrieve a dependency based on the abstraction <typeparamref name="T"/>.
+        /// This extends the default DependencyService capability by allowing this method
+        /// to create types which are not registered but have a public constructor.
+        /// </summary>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        /// <param name="scope">Scope of the returning object (global or new)</param>
+        public T Get<T>(DependencyScope scope) where T : class
+        {
             Type targetType = typeof(T);
             if (DependencyInstances.ContainsKey(targetType))
                 return DependencyInstances[targetType] as T;
 
             // Try the underlying DependencyService.
-            T value = DependencyService.Get<T>();
+            T value = DependencyService.Get<T>(scope == DependencyScope.Global 
+                            ? DependencyFetchTarget.GlobalInstance : DependencyFetchTarget.NewInstance);
             if (value != null)
                 return value;
 

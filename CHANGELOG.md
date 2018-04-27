@@ -6,6 +6,7 @@
 - `FormsNavigationPageService` supports the new ViewModel initialization support.
 - `SimpleViewModel` implements the new `IViewModelNavigationInit` interface and forwards it to a virtual method.
 - `SimpleViewModel.RaisePropertyChanged` is now virtual and used to raise all property changes so it can be overridden.
+- A new version of `IDependencyService.Get<T>` is available which takes a `DependencyScope` parameter to determine whether a new instance or global instance is returned.
 
 ## [1.6.0]
 ### Breaking changes
