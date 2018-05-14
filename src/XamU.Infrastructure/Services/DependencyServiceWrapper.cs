@@ -49,7 +49,7 @@ namespace XamarinUniversity.Services
         /// </summary>
         public DependencyServiceWrapper()
         {
-            genericGetMethod = GetType().GetTypeInfo().GetDeclaredMethod("Get");
+            genericGetMethod = GetType().GetTypeInfo().GetDeclaredMethods("Get").Single(m => m.GetParameters().Length == 1);
         }
 
         /// <summary>
@@ -99,9 +99,10 @@ namespace XamarinUniversity.Services
                     return Activator.CreateInstance(targetType) as T;
 
                 // Pick the first public constructor found and create any parameters.
-                return Activator.CreateInstance(targetType, ctors.First().GetParameters()
+                // Note we use the same scope as passed to create all the parameters.
+                return Activator.CreateInstance(targetType, ctors[0].GetParameters()
                     .Select(p => genericGetMethod.MakeGenericMethod(p.ParameterType)
-                    .Invoke(this, null))
+                    .Invoke(this, new object[] { scope }))
                     .ToArray()) as T;
             }
             catch (Exception ex)
