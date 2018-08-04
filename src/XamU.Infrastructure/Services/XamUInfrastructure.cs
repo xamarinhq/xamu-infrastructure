@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using XamarinUniversity.Infrastructure;
+
+[assembly:InternalsVisibleTo("XamU.Infrastructure.Tests")]
 
 namespace XamarinUniversity.Services
 {
@@ -25,7 +28,8 @@ namespace XamarinUniversity.Services
     /// </summary>
     public static class XamUInfrastructure
     {
-        static IDependencyService serviceLocator;
+        private static bool initialized;
+        internal static IDependencyService serviceLocator;
 
         /// <summary>
         /// This allows you to retrieve and customize the global dependency service
@@ -81,6 +85,10 @@ namespace XamarinUniversity.Services
                    $"Must call {nameof(XamUInfrastructure.Init)} before using any library features; " +
                    "ServiceLocator has already been set.");
             }
+
+            // Can call Init multiple times as long as you don't change the locator.
+            if (initialized) return serviceLocator;
+            initialized = true;
 
             // Assign the locator; either use the supplied one, or the default
             // DependencyService version if not supplied.
