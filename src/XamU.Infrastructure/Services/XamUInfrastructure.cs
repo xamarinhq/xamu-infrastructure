@@ -16,11 +16,11 @@ namespace XamarinUniversity.Services
         /// <summary>
         /// Register the default (Forms) navigation service
         /// </summary>
-        Navigation,
+        Navigation = 1,
         /// <summary>
         /// Register the default (Forms) message visualizer
         /// </summary>
-        MessageVisualizer
+        MessageVisualizer = 2
     }
 
     /// <summary>
@@ -96,7 +96,13 @@ namespace XamarinUniversity.Services
             }
 
             // Can call Init multiple times as long as you don't change the locator.
-            if (initialized) return serviceLocator;
+            if (initialized)
+            {
+                Debug.Assert(serviceLocator != null);
+                return ServiceLocator;
+            }
+
+            // Only do the remaining logic once or we get duplicate key exceptions.
             initialized = true;
 
             // Assign the locator; either use the supplied one, or the default
@@ -112,21 +118,40 @@ namespace XamarinUniversity.Services
             }
 
             // Register the services
-            if ((registerBehavior & RegisterBehavior.MessageVisualizer) != 0)
+            if ((registerBehavior & RegisterBehavior.MessageVisualizer) == RegisterBehavior.MessageVisualizer)
             {
-                defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService>();
+                try
+                {
+                    defaultLocator.Register<IMessageVisualizerService, FormsMessageVisualizerService>();
+                }
+                catch (ArgumentException)
+                {
+                }
             }
 
-            if ((registerBehavior & RegisterBehavior.Navigation) != 0)
+            if ((registerBehavior & RegisterBehavior.Navigation) == RegisterBehavior.Navigation)
             {
                 // Use a single instance for the navigation service and
                 // register both interfaces against it.
                 var navService = new FormsNavigationPageService();
-                defaultLocator.Register<INavigationPageService>(navService);
-                defaultLocator.Register<INavigationService>(navService);
+
+                try
+                {
+                    defaultLocator.Register<INavigationPageService>(navService);
+                    defaultLocator.Register<INavigationService>(navService);
+                }
+                catch (ArgumentException)
+                {
+                }
             }
 
-            defaultLocator.Register<IDependencyService>(defaultLocator);
+            try
+            {
+                defaultLocator.Register<IDependencyService>(defaultLocator);
+            }
+            catch (ArgumentException)
+            {
+            }
 
             return defaultLocator;
         }
