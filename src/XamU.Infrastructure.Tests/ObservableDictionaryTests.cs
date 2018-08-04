@@ -17,6 +17,31 @@ namespace XamU.Infrastructure.Tests
     public class ObservableDictionaryTests
     {
         [TestMethod]
+        public void AddStringTest()
+        {
+            var target = new ObservableDictionary<string,int>();
+
+            bool hitChange = false;
+            const string key = "Hello";
+            const int value = 10;
+
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == key || e.PropertyName == "Count"); };
+
+            target.CollectionChanged += (s, e) =>
+            {
+                hitChange = true;
+                Assert.AreSame(target, s);
+                Assert.AreEqual(NotifyCollectionChangedAction.Add, e.Action);
+                var item = (KeyValuePair<string, int>)e.NewItems[0];
+                Assert.AreEqual(key, item.Key);
+                Assert.AreEqual(value, item.Value);
+            };
+
+            target[key] = value;
+            Assert.IsTrue(hitChange);
+        }
+
+        [TestMethod]
         public void AddTest()
         {
             var target = new ObservableDictionary<int, string>();
@@ -24,6 +49,8 @@ namespace XamU.Infrastructure.Tests
             bool hitChange = false;
             const int key = 10;
             const string value = "Hello";
+
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == key.ToString() || e.PropertyName == "Count"); };
 
             target.CollectionChanged += (s, e) =>
             {
