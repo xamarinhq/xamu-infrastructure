@@ -29,7 +29,16 @@ namespace XamarinUniversity.Services
     public static class XamUInfrastructure
     {
         private static bool initialized;
-        internal static IDependencyService serviceLocator;
+        private static IDependencyService serviceLocator;
+
+        /// <summary>
+        /// Used to reset for unit tests.
+        /// </summary>
+        internal static void Reset()
+        {
+            initialized = false;
+            serviceLocator = null;
+        }
 
         /// <summary>
         /// This allows you to retrieve and customize the global dependency service

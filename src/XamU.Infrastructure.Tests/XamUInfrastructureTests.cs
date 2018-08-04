@@ -14,7 +14,7 @@ namespace XamU.Infrastructure.Tests
         public void Reset()
         {
             // Reset private field.
-            XamUInfrastructure.serviceLocator = null;
+            XamUInfrastructure.Reset();
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace XamU.Infrastructure.Tests
             var ds1 = new MockDependencService();
             var ds2 = XamUInfrastructure.Init(ds1);
             Assert.IsNotNull(XamUInfrastructure.ServiceLocator);
-            Assert.AreSame(ds1, XamUInfrastructure.ServiceLocator);
+            Assert.AreSame(ds1, ds2);
         }
 
         [TestMethod]

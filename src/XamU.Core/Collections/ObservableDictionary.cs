@@ -50,7 +50,7 @@ namespace XamarinUniversity.Infrastructure
     {
         // Internal dictionary that holds values
         private readonly IDictionary<TKey, TValue> underlyingDictionary;
-        bool shouldRaiseNotifications;
+        bool shouldRaiseNotifications = true;
 
         /// <summary>
         /// Event raised for collection change notification
@@ -261,10 +261,7 @@ namespace XamarinUniversity.Infrastructure
         /// <returns>
         /// The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
         /// </returns>
-        public int Count
-        {
-            get { return underlyingDictionary.Count; }
-        }
+        public int Count => underlyingDictionary.Count;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
@@ -272,10 +269,7 @@ namespace XamarinUniversity.Infrastructure
         /// <returns>
         /// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
         /// </returns>
-        public bool IsReadOnly
-        {
-            get { return false; } 
-        }
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets or sets the element with the specified key.
@@ -290,7 +284,7 @@ namespace XamarinUniversity.Infrastructure
         /// </exception>
         public TValue this[TKey key]
         {
-            get { return underlyingDictionary[key]; }
+            get => underlyingDictionary[key];
             set 
             {
                 if (underlyingDictionary.ContainsKey(key))
@@ -313,10 +307,7 @@ namespace XamarinUniversity.Infrastructure
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
-        public ICollection<TKey> Keys
-        {
-            get { return underlyingDictionary.Keys; }
-        }
+        public ICollection<TKey> Keys => underlyingDictionary.Keys;
 
         /// <summary>
         /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="T:System.Collections.Generic.IDictionary`2"/>.
@@ -324,10 +315,7 @@ namespace XamarinUniversity.Infrastructure
         /// <returns>
         /// An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the object that implements <see cref="T:System.Collections.Generic.IDictionary`2"/>.
         /// </returns>
-        public ICollection<TValue> Values
-        {
-            get { return underlyingDictionary.Values; } 
-        }
+        public ICollection<TValue> Values => underlyingDictionary.Values;
 
         /// <summary>
         /// This is used to notify insertions into the dictionary.
