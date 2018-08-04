@@ -4,7 +4,7 @@
     <TargetFrameworks></TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid71;uap10.0.16299</TargetFrameworks>
     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid71;</TargetFrameworks>    
-    <Version>2.0.0</Version>
+    <Version>2.1.0</Version>
     <PackageTitle>XamarinUniversity.Core</PackageTitle>
     <Title>Xamarin University Core Library</Title>
     <Authors>Microsoft, Xamarin University</Authors>
@@ -23,8 +23,8 @@
     <Company>Microsoft, Xamarin University</Company>
     <Copyright>Copyright (C) 2017-2018 Microsoft, Xamarin University</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>2.1.0.0</AssemblyVersion>
+    <FileVersion>2.1.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)'=='Debug' ">

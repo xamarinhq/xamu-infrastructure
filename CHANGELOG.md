@@ -1,4 +1,9 @@
-## XamU.Infrastructure [2.0.0]
+## XamU.Infrastructure [2.1.0]
+- Allows `XamUInfrastructure.Init` to be called multiple times for native Android initialization in an Activity.
+- Fixed a bug in `ObservableCollection` to ensure it always reports change notifications even when `MassUpdate` is not being used.
+- Added unit tests to check new features.
+
+## [2.0.0]
 ### Breaking changes
 - New property on `IntegerToBoolean` which allows for a test of `One` vs. `Zero`.
 - The `NavigateAsync` methods on `INavigationService` have been split into multiple methods instead of default parameters.
