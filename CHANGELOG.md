@@ -1,3 +1,6 @@
+## XamU.Core [2.1.1]
+- Fix bug in `ObservableDictionary` so it's property raising `PropertyChange` notifications on `Item[key]` to allow Forms to see it.
+
 ## XamU.Infrastructure [2.1.0]
 - Allows `XamUInfrastructure.Init` to be called multiple times for native Android initialization in an Activity.
 - Fixed a bug in `ObservableCollection` to ensure it always reports change notifications even when `MassUpdate` is not being used.

@@ -324,8 +324,10 @@ namespace XamarinUniversity.Infrastructure
         protected void OnNotifyAdd(KeyValuePair<TKey, TValue> item)
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
-            OnPropertyChanged (new PropertyChangedEventArgs (nameof (Count)));
-            OnPropertyChanged (new PropertyChangedEventArgs (item.Key.ToString ()));
+            OnPropertyChanged (new PropertyChangedEventArgs(nameof (Count)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Keys)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Values)));
+            OnPropertyChanged(new PropertyChangedEventArgs ($"Item[{item.Key.ToString()}]"));
         }
 
 
@@ -337,7 +339,9 @@ namespace XamarinUniversity.Infrastructure
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
             OnPropertyChanged (new PropertyChangedEventArgs (nameof (Count)));
-            OnPropertyChanged (new PropertyChangedEventArgs (item.Key.ToString ()));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Keys)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Values)));
+            OnPropertyChanged(new PropertyChangedEventArgs ($"Item[{item.Key.ToString()}]"));
         }
 
         /// <summary>
@@ -348,7 +352,8 @@ namespace XamarinUniversity.Infrastructure
         protected void OnNotifyReplace(KeyValuePair<TKey, TValue> newItem, KeyValuePair<TKey, TValue> oldItem)
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, newItem, oldItem));
-            OnPropertyChanged (new PropertyChangedEventArgs (oldItem.Key.ToString ()));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Values)));
+            OnPropertyChanged(new PropertyChangedEventArgs ($"Item[{oldItem.Key.ToString()}]"));
         }
 
         /// <summary>
@@ -358,6 +363,8 @@ namespace XamarinUniversity.Infrastructure
         {
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             OnPropertyChanged (new PropertyChangedEventArgs (nameof (Count)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Keys)));
+            OnPropertyChanged(new PropertyChangedEventArgs(nameof(Values)));
         }
 
         /// <summary>

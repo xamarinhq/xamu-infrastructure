@@ -25,7 +25,7 @@ namespace XamU.Infrastructure.Tests
             const string key = "Hello";
             const int value = 10;
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == key || e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -50,7 +50,7 @@ namespace XamU.Infrastructure.Tests
             const int key = 10;
             const string value = "Hello";
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == key.ToString() || e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -77,6 +77,8 @@ namespace XamU.Infrastructure.Tests
             const string value2 = "World";
 
             target[key] = value;
+
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -106,6 +108,8 @@ namespace XamU.Infrastructure.Tests
 
             target[key] = value;
 
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == "Count"); };
+
             target.CollectionChanged += (s, e) =>
             {
                 hitChange = true;
@@ -128,6 +132,8 @@ namespace XamU.Infrastructure.Tests
             const string value = "Hello";
 
             target[key] = value;
+
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
 
             target.CollectionChanged += (s, e) =>
             {
