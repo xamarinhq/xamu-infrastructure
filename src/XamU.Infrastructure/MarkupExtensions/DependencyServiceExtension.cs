@@ -25,9 +25,11 @@
 // THE SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Reflection;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XamarinUniversity.Services;
 
 namespace XamarinUniversity.Infrastructure
 {
@@ -40,14 +42,14 @@ namespace XamarinUniversity.Infrastructure
     /// BindingContext="{DependencyService Type={x:Type someVMType}}"
     /// </code>
     /// </example>
-    [ContentProperty ("Type")]
+    [ContentProperty("Type")]
     public class DependencyServiceExtension : IMarkupExtension
     {
         /// <summary>
         /// Fetch target type for <seealso cref="DependencyService"/>
         /// </summary>
         /// <value>The fetch target.</value>
-        public DependencyFetchTarget FetchTarget { get; set; }
+        public DependencyScope Scope { get; set; }
 
         /// <summary>
         /// Type to retrieve (interface or class)
@@ -61,7 +63,7 @@ namespace XamarinUniversity.Infrastructure
         public DependencyServiceExtension()
         {
             // Default is a global instance.
-            FetchTarget = DependencyFetchTarget.GlobalInstance;
+            Scope = DependencyScope.Global;
         }
 
         /// <summary>
@@ -72,12 +74,19 @@ namespace XamarinUniversity.Infrastructure
         public object ProvideValue(IServiceProvider serviceProvider)
         {
             if (Type == null)
-                throw new InvalidOperationException("Type argument mandatory for DependencyService extension");
+                throw new InvalidOperationException("Type argument mandatory for DependencyService extension.");
 
-            // DependencyService.Get<T>();
-            var mi = typeof (DependencyService).GetTypeInfo().GetDeclaredMethod("Get");
+            var ds = XamUInfrastructure.ServiceLocator;
+            if (ds == null)
+                throw new InvalidOperationException("DependencyService extension requires XamUInfrastructure.Init.");
+
+            // ds.Get<T>(Scope);
+            var mi = ds.GetType().GetTypeInfo().GetDeclaredMethods("Get").First(m => m.GetParameters().Length == 1);
             var cmi = mi.MakeGenericMethod(Type);
-            return cmi.Invoke(null, new object[] { FetchTarget });
+            var result = cmi.Invoke(ds, new object[] { Scope });
+
+            return result;
         }
     }
+
 }
