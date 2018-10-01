@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using XamarinUniversity.Infrastructure;
@@ -16,6 +17,8 @@ namespace XamU.Infrastructure.Tests
     [TestClass]
     public class ObservableDictionaryTests
     {
+        private readonly string[] changedProperties = {"Count", "Keys", "Values"};
+
         [TestMethod]
         public void AddStringTest()
         {
@@ -25,7 +28,7 @@ namespace XamU.Infrastructure.Tests
             const string key = "Hello";
             const int value = 10;
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Item[{key}]" || changedProperties.Contains(e.PropertyName)); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -50,7 +53,7 @@ namespace XamU.Infrastructure.Tests
             const int key = 10;
             const string value = "Hello";
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Item[{key}]" || changedProperties.Contains(e.PropertyName)); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -78,7 +81,7 @@ namespace XamU.Infrastructure.Tests
 
             target[key] = value;
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Item[{key}]" || changedProperties.Contains(e.PropertyName)); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -108,7 +111,7 @@ namespace XamU.Infrastructure.Tests
 
             target[key] = value;
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(changedProperties.Contains(e.PropertyName)); };
 
             target.CollectionChanged += (s, e) =>
             {
@@ -133,7 +136,7 @@ namespace XamU.Infrastructure.Tests
 
             target[key] = value;
 
-            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Index[{key}]" || e.PropertyName == "Count"); };
+            target.PropertyChanged += (s, e) => { Assert.IsTrue(e.PropertyName == $"Item[{key}]" || changedProperties.Contains(e.PropertyName)); };
 
             target.CollectionChanged += (s, e) =>
             {

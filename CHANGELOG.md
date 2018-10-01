@@ -1,3 +1,9 @@
+## [2.2.0]
+### Breaking changes
+- We had to change the `FormsNavigationPageService` to support re-locating the `NavigationPage` for Android when it relaunches the Activity. Because of that, we cannot support setting the `Navigation` property - if you are using this, it will now throw a `NotSupportedException` and you will need to provide your own implementation of the service.
+- The `DependencyServiceExtension` now uses the wrapper - so it can create objects and inject dependencies. This means you do not need to register ViewModel objects.
+- Updated the Xamarin.Forms package.
+
 ## XamU.Core [2.1.1]
 - Fix bug in `ObservableDictionary` so it's property raising `PropertyChange` notifications on `Item[key]` to allow Forms to see it.
 

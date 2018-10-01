@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamarinUniversity.Infrastructure;
@@ -43,6 +44,7 @@ namespace XamarinUniversity.Services
         private static readonly Task TaskCompleted = Task.FromResult(0);
 #endif
         private INavigation navigation;
+        private NavigationPage currentNavigationPage;
         private Dictionary<object, Func<Page>> registeredPages;
         private Dictionary<object, Func<object, Page>> registeredStatePages;
         private Dictionary<object, Action<object>> registeredActions;
@@ -75,10 +77,7 @@ namespace XamarinUniversity.Services
         /// <value>The key comparer.</value>
         public IEqualityComparer<object> KeyComparer
         {
-            get
-            {
-                return registeredPages?.Comparer;
-            }
+            get => registeredPages?.Comparer;
 
             set
             {
@@ -236,19 +235,17 @@ namespace XamarinUniversity.Services
         /// <returns>The navigation page.</returns>
         NavigationPage FindNavigationPage()
         {
-            NavigationPage navPage = null;
-
             // Most of the time this is good.
-            navPage = Application.Current.MainPage as NavigationPage;
+            var navPage = Application.Current.MainPage as NavigationPage;
             if (navPage == null)
             {
                 // Special case for Master/Detail page.
-                MasterDetailPage mdPage = Application.Current.MainPage as MasterDetailPage;
-                if (mdPage != null)
+                if (Application.Current.MainPage is MasterDetailPage mdPage)
+                {
                     // Should always have a NavigationPage as the Detail
                     navPage = mdPage.Detail as NavigationPage;
+                }
             }
-
             return navPage;
         }
 
@@ -261,29 +258,34 @@ namespace XamarinUniversity.Services
         {
             get
             {
-                if (navigation == null)
+                // Locate the navigation page.
+                var navPage = FindNavigationPage();
+                if (navPage == null)
+                    throw new Exception($"Failed to locate required {nameof(NavigationPage)} from App.MainPage.");
+
+                if (navPage != currentNavigationPage)
                 {
-                    // Locate the navigation page.
-                    var navPage = FindNavigationPage ();
-                    if (navPage == null)
-                        throw new Exception ("Failed to locate required NavigationPage from App.MainPage.");
+                    navigation = null;
 
-                    // Cache off Navigation interface.
-                    navigation = navPage.Navigation;
+                    // Unwire from the old object to let it go away
+                    if (currentNavigationPage != null)
+                    {
+                        currentNavigationPage.Pushed -= OnPagePushed;
+                        currentNavigationPage.Popped -= OnPagePopped;
+                        currentNavigationPage.PoppedToRoot -= OnPagePopped;
+                    }
 
-                    // Wire into navigation events.
-                    navPage.Pushed += OnPagePushed;
-                    navPage.Popped += OnPagePopped;
-                    navPage.PoppedToRoot += OnPagePopped;
+                    // Wire into the events.
+                    currentNavigationPage = navPage;
+                    currentNavigationPage.Pushed += OnPagePushed;
+                    currentNavigationPage.Popped += OnPagePopped;
+                    currentNavigationPage.PoppedToRoot += OnPagePopped;
                 }
 
-                return navigation;
+                return navigation ?? (navigation = navPage.Navigation);
             }
 
-            set
-            {
-                navigation = value;
-            }
+            set => throw new NotSupportedException($"{nameof(FormsNavigationPageService)} doesn't support setting the Navigation property.");
         }
         
         /// <summary>
@@ -291,7 +293,7 @@ namespace XamarinUniversity.Services
         /// </summary>
         /// <param name="sender">NavigationPage</param>
         /// <param name="e">Details</param>
-        void OnPagePushed (object sender, Xamarin.Forms.NavigationEventArgs e)
+        void OnPagePushed (object sender, NavigationEventArgs e)
         {
             Navigated?.Invoke (this, EventArgs.Empty);
         }
@@ -302,7 +304,7 @@ namespace XamarinUniversity.Services
         /// </summary>
         /// <param name="sender">NavigationPage</param>
         /// <param name="e">Details</param>
-        void OnPagePopped (object sender, Xamarin.Forms.NavigationEventArgs e)
+        void OnPagePopped (object sender, NavigationEventArgs e)
         {
             NavigatedBack?.Invoke (this, EventArgs.Empty);
         }
@@ -333,24 +335,21 @@ namespace XamarinUniversity.Services
             // will be using the Detail page.
             if (HideMasterPageOnNavigation)
             {
-                var mdPage = Application.Current.MainPage as MasterDetailPage;
-                if (mdPage != null)
+                if (Application.Current.MainPage is MasterDetailPage mdPage)
                 {
                     mdPage.IsPresented = false;
                 }
             }
 
             // Look for a registered page first. If that's not available, look for an action.
-            bool usedState;
-            var page = GetPageByKey(key, state, out usedState);
+            var page = GetPageByKey(key, state, out bool usedState);
             if (page == null)
             {
                 if (registeredActions != null)
                 {
-                    Action<object> work;
-                    if (registeredActions.TryGetValue(key, out work))
+                    if (registeredActions.TryGetValue(key, out var action))
                     {
-                        work.Invoke(state);
+                        action.Invoke(state);
                     }
                 }
                 return;
@@ -404,8 +403,7 @@ namespace XamarinUniversity.Services
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            bool usedState;
-            var page = GetPageByKey(key, state, out usedState);
+            var page = GetPageByKey(key, state, out var usedState);
             if (page == null)
             {
                 throw new ArgumentException("Cannot navigate to unregistered page", nameof(key));
@@ -436,8 +434,7 @@ namespace XamarinUniversity.Services
             }
 
             // See if our VM allows for initialization via our interface.
-            var vmInit = page.BindingContext as IViewModelNavigationInit;
-            if (vmInit != null)
+            if (page.BindingContext is IViewModelNavigationInit vmInit)
             {
                 await vmInit.IntializeAsync(state);
             }
